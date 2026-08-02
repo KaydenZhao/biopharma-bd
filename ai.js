@@ -145,15 +145,15 @@
 
   function ensureConfig(cb){ if(configured()){ cb(); } else { openConfig(); } }
 
-  // ===== 胖猫知识库检索（RAG，静态 kb-pangmao.js）=====
-  // 来源：IMA 知识库「胖猫」（公开内容：胖猫的生命科学札记）。纯前端关键词检索，无 embedding 依赖。
+  // ===== IMA 知识库检索（RAG，静态 kb-ima.js）=====
+  // 来源：IMA 知识库「胖猫」（公开内容：胖猫的生命科学札记）+「医药笔记」（雪球医药资讯精选）。纯前端关键词检索，无 embedding 依赖。
   var kbLoaded = null;
   function loadKB(){
     if(kbLoaded) return kbLoaded;
     kbLoaded = new Promise(function(resolve){
-      if(window.PANGMAO_KB){ resolve(true); return; }
+      if(window.IMA_KB){ resolve(true); return; }
       var sc = document.createElement('script');
-      sc.src = 'kb-pangmao.js';
+      sc.src = 'kb-ima.js';
       sc.onload = function(){ resolve(true); };
       sc.onerror = function(){ resolve(false); };
       document.head.appendChild(sc);
@@ -185,7 +185,7 @@
   }
   function retrieve(query, k){
     k = k || 6;
-    var kb = window.PANGMAO_KB;
+    var kb = window.IMA_KB;
     if(!kb || !kb.length) return [];
     var terms = tokenize(query);
     if(!terms.length) return [];
@@ -196,7 +196,8 @@
     }
     scored.sort(function(a,b){ return b.sc - a.sc; });
     return scored.slice(0, k).map(function(x){
-      return '【来源：' + x.item.doc + '（' + x.item.cat + '）】\n' + x.item.text;
+      var src = x.item.src ? (' · ' + x.item.src) : '';
+      return '【来源：' + x.item.doc + '（' + x.item.cat + src + '）】\n' + x.item.text;
     });
   }
 
