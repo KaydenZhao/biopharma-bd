@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>工具 — BD之家</title>
-    <meta name="description" content="BD之家 · AI 工具：靶点调研、Termsheet 撰写与审查、交易对比。基于站内 BD 交易数据库智能检索与生成">
+    <meta name="description" content="BD之家 · AI 工具：靶点调研、合同撰写与审查、交易对比、AI 翻译。基于站内 BD 交易数据库智能检索与生成">
     <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -103,20 +103,20 @@
     <!-- ===== TOOLS ===== -->
     <section class="pt-28 pb-16 sm:pt-32 sm:pb-20 bg-white scroll-mt-16">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center fade-up mb-8">
-                <span class="text-xs font-semibold text-navy-500 uppercase tracking-widest">AI Tools</span>
-                <h2 class="text-2xl sm:text-3xl font-bold text-navy-800 mt-2">BD 智能工具</h2>
-                <div class="accent-line mx-auto mt-3"></div>
-                <p class="mt-4 text-sm text-gray-500 max-w-2xl mx-auto">基于站内 BD 交易数据库的智能检索与生成。配置 DeepSeek Key 后，靶点调研、Termsheet 撰写 / 审查、交易对比均可升级为 AI 联网增强模式（右下角「AI 配置」）。</p>
-            </div>
+            <div class="grid lg:grid-cols-5 gap-8 items-start">
+                <!-- 左侧导航 -->
+                <aside class="lg:col-span-1">
+                    <nav class="space-y-2 lg:sticky lg:top-28">
+                        <button data-tabbtn="target" class="tool-btn w-full text-left px-4 py-3 rounded-xl border border-gray-200 text-sm font-medium">靶点调研</button>
+                        <button data-tabbtn="termsheet" class="tool-btn w-full text-left px-4 py-3 rounded-xl border border-gray-200 text-sm font-medium">合同撰写</button>
+                        <button data-tabbtn="review" class="tool-btn w-full text-left px-4 py-3 rounded-xl border border-gray-200 text-sm font-medium">合同审查</button>
+                        <button data-tabbtn="compare" class="tool-btn w-full text-left px-4 py-3 rounded-xl border border-gray-200 text-sm font-medium">交易对比</button>
+                        <button data-tabbtn="translate" class="tool-btn w-full text-left px-4 py-3 rounded-xl border border-gray-200 text-sm font-medium">AI 翻译</button>
+                    </nav>
+                </aside>
 
-            <!-- Tab 切换 -->
-            <div class="flex flex-wrap justify-center gap-3 mb-8 fade-up" id="toolTabs">
-                <button data-tabbtn="target" class="tool-btn px-5 py-2.5 rounded-xl border border-gray-200 text-sm font-medium">靶点调研</button>
-                <button data-tabbtn="termsheet" class="tool-btn px-5 py-2.5 rounded-xl border border-gray-200 text-sm font-medium">Termsheet 撰写</button>
-                <button data-tabbtn="review" class="tool-btn px-5 py-2.5 rounded-xl border border-gray-200 text-sm font-medium">Termsheet 审查</button>
-                <button data-tabbtn="compare" class="tool-btn px-5 py-2.5 rounded-xl border border-gray-200 text-sm font-medium">交易对比</button>
-            </div>
+                <!-- 右侧内容 -->
+                <div class="lg:col-span-4">
 
             <!-- ===== 靶点调研 ===== -->
             <div data-panel="target" class="tool-panel fade-up">
@@ -137,7 +137,7 @@
                 </div>
             </div>
 
-            <!-- ===== Termsheet 撰写 ===== -->
+            <!-- ===== 合同撰写 ===== -->
             <div data-panel="termsheet" class="tool-panel fade-up hidden">
                 <div class="grid lg:grid-cols-2 gap-6">
                     <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
@@ -230,7 +230,7 @@
                 </div>
             </div>
 
-            <!-- ===== Termsheet 审查 ===== -->
+            <!-- ===== 合同审查 ===== -->
             <div data-panel="review" class="tool-panel fade-up hidden">
                 <div class="grid lg:grid-cols-2 gap-6">
                     <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
@@ -269,6 +269,35 @@
                         </div>
                         <div id="cmpBasket" class="flex flex-wrap gap-2 mb-4"></div>
                         <div id="cmpResult" class="rounded-2xl border border-dashed border-gray-200 py-16 text-center text-gray-400 text-sm">选择交易后点击「生成对比」</div>
+                    </div>
+                </div>
+            </div>
+                    <!-- ===== AI 翻译 ===== -->
+                    <div data-panel="translate" class="tool-panel fade-up hidden">
+                        <div class="grid lg:grid-cols-3 gap-6">
+                            <div class="lg:col-span-1">
+                                <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">翻译方向</label>
+                                    <select id="trDir" class="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm input-focus bg-white mb-3">
+                                        <option value="zh2en">中文 → 英文</option>
+                                        <option value="en2zh">英文 → 中文</option>
+                                    </select>
+                                    <button id="trBtn" class="w-full px-4 py-3 bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-semibold rounded-xl hover:opacity-90 transition-all active:scale-[0.98] text-sm">🤖 AI 翻译</button>
+                                    <p class="mt-3 text-xs text-gray-400 leading-relaxed">粘贴 BD / 合同条款，调用 DeepSeek 进行专业医学与商务翻译。需在右下角「AI 配置」填写 DeepSeek Key。</p>
+                                </div>
+                            </div>
+                            <div class="lg:col-span-2 space-y-4">
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-500 mb-1">原文</label>
+                                    <textarea id="trSrc" rows="8" placeholder="在此粘贴需要翻译的文本……" class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm input-focus transition-all resize-y"></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-500 mb-1">译文</label>
+                                    <div id="trOut" class="min-h-[160px] rounded-2xl border border-gray-200 bg-gray-50 p-5 text-sm text-gray-700 whitespace-pre-wrap"></div>
+                                    <button id="trCopy" class="mt-3 px-3 py-1.5 text-xs font-medium text-navy-600 border border-navy-200 rounded-lg hover:bg-navy-50 transition-colors hidden">复制</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -348,12 +377,10 @@
 
         // ===== Tabs =====
         var tabBtns = document.querySelectorAll('[data-tabbtn]');
-        var INACTIVE = 'tool-btn px-5 py-2.5 rounded-xl border border-gray-200 text-sm font-medium';
-        var ACTIVE = INACTIVE + ' active';
         function activate(name) {
             tabBtns.forEach(function (b) {
                 var on = b.getAttribute('data-tabbtn') === name;
-                b.className = on ? ACTIVE : INACTIVE;
+                b.classList.toggle('active', on);
             });
             document.querySelectorAll('.tool-panel').forEach(function (p) {
                 p.classList.toggle('hidden', p.getAttribute('data-panel') !== name);
@@ -379,7 +406,7 @@
             if (e.key === 'Enter') { var b = document.getElementById('targetAiBtn'); if (b) b.click(); }
         });
 
-        // ===== Termsheet 撰写 =====
+        // ===== 合同撰写 =====
         function genTermsheet() {
             var g = function (id) { return document.getElementById(id).value.trim(); };
             var lic = g('tsLic'), lee = g('tsLee'), product = g('tsProduct');
@@ -451,7 +478,7 @@
             a.click();
         });
 
-        // ===== Termsheet 审查 =====
+        // ===== 合同审查 =====
         var REVIEW_RULES = [
             { name: '交易主体（授权方 / 引进方）', keys: ['授权方', '引进方', '许可方', '被许可方', 'licensor', 'licensee', '出让方', '受让方'] },
             { name: '标的资产（靶点 / 产品 / 管线）', keys: ['靶点', '产品', '候选', '资产', '化合物', '管线', '分子'] },
@@ -643,6 +670,34 @@
         if (rAiBtn) rAiBtn.addEventListener('click', function () { runAI(rAiBtn, reviewAi); });
         var cAiBtn = document.getElementById('cmpAi');
         if (cAiBtn) cAiBtn.addEventListener('click', function () { runAI(cAiBtn, cmpAi); });
+
+        // ===== AI 翻译 =====
+        var trBtn = document.getElementById('trBtn');
+        if (trBtn) trBtn.addEventListener('click', function () {
+            var src = (document.getElementById('trSrc').value || '').trim();
+            var dir = document.getElementById('trDir').value;
+            if (!src) { alert('请先粘贴需要翻译的文本'); return; }
+            var out = document.getElementById('trOut');
+            out.textContent = '翻译中…';
+            var sys = dir === 'zh2en'
+                ? '你是资深医药 / 生物科技 BD 翻译专家，精通中英医学、药学、商务与法律术语。请将用户提供的中文 BD / 合同文本准确译为专业英文，保留条款结构与编号，不增删事实。'
+                : '你是资深医药 / 生物科技 BD 翻译专家，精通中英医学、药学、商务与法律术语。请将用户提供的英文 BD / 合同文本准确译为专业中文，保留条款结构与编号，不增删事实。';
+            var messages = [
+                { role: 'system', content: sys },
+                { role: 'user', content: '请翻译以下文本：\n' + src }
+            ];
+            runAI(trBtn, function () {
+                return BD_AI.callDeepSeek(messages).then(function (text) {
+                    out.textContent = text;
+                    document.getElementById('trCopy').classList.remove('hidden');
+                });
+            });
+        });
+        var trCopy = document.getElementById('trCopy');
+        if (trCopy) trCopy.addEventListener('click', function () {
+            var t = document.getElementById('trOut').textContent || '';
+            if (navigator.clipboard) navigator.clipboard.writeText(t);
+        });
 
         // ===== init from URL =====
         var initTool = new URLSearchParams(location.search).get('tool');
