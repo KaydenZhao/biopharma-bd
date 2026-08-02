@@ -1,10 +1,10 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BD之家 — 生物医药商务拓展</title>
-    <meta name="description" content="BD之家 · 聚焦生物医药商务拓展，提供交易动态与行业资讯">
+    <title>交易详情 — BD之家</title>
+    <meta name="description" content="BD之家 · 生物医药 BD 交易详情、相关链接与讨论区">
     <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -54,7 +54,6 @@
     <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 glass-nav bg-white/85 border-b border-gray-100 transition-all duration-300">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
-                <!-- Logo -->
                 <a href="index.html" class="flex items-center gap-2.5 shrink-0">
                     <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-navy-500 to-navy-700 flex items-center justify-center">
                         <svg class="w-5 h-5 text-white" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -64,14 +63,12 @@
                     <span class="text-lg font-bold text-navy-700 tracking-tight">BD之家</span>
                 </a>
 
-                <!-- Desktop Links -->
                 <div class="hidden md:flex items-center gap-6 text-sm font-medium">
-                    <a href="index.html" class="text-navy-600 hover:text-navy-800 transition-colors">首页</a>
-                    <a href="news.html" class="text-gray-500 hover:text-navy-700 transition-colors">新闻</a>
+                    <a href="index.html" class="text-gray-500 hover:text-navy-700 transition-colors">首页</a>
+                    <a href="news.html" class="text-navy-600 hover:text-navy-800 transition-colors">新闻</a>
                     <a href="xuetang.html" class="text-gray-500 hover:text-navy-700 transition-colors">学堂</a>
                     <a href="tools.html" class="text-gray-500 hover:text-navy-700 transition-colors">工具</a>
 
-                    <!-- 登录态显示区（默认隐藏） -->
                     <div id="userArea" class="hidden flex items-center gap-3 pl-2 border-l border-gray-200">
                         <span class="flex items-center gap-1.5 text-navy-700">
                             <svg class="w-4 h-4 text-navy-500" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -80,12 +77,10 @@
                         <button id="logoutBtn" class="text-gray-400 hover:text-navy-700 transition-colors">退出</button>
                     </div>
 
-                    <!-- 未登录显示区 -->
                     <button id="loginBtn" class="px-4 py-2 bg-navy-600 text-white rounded-lg hover:bg-navy-700 transition-all text-sm">登录</button>
                     <button id="registerBtn" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-all text-sm">注册</button>
                 </div>
 
-                <!-- Mobile Burger -->
                 <button id="menuBtn" class="md:hidden p-2 rounded-lg hover:bg-navy-50 transition-colors" aria-label="菜单">
                     <svg id="menuIcon" class="w-6 h-6 text-navy-700" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
@@ -93,10 +88,9 @@
                 </button>
             </div>
 
-            <!-- Mobile Menu -->
             <div id="mobileMenu" class="md:hidden hidden pb-4 flex flex-col gap-2 text-sm font-medium">
-                <a href="index.html" class="block px-3 py-2 rounded-lg text-navy-600 bg-navy-50 transition-colors mobile-link">首页</a>
-                <a href="news.html" class="block px-3 py-2 rounded-lg text-gray-600 hover:bg-navy-50 transition-colors mobile-link">新闻</a>
+                <a href="index.html" class="block px-3 py-2 rounded-lg text-gray-600 hover:bg-navy-50 transition-colors mobile-link">首页</a>
+                <a href="news.html" class="block px-3 py-2 rounded-lg text-navy-600 bg-navy-50 transition-colors mobile-link">新闻</a>
                 <a href="xuetang.html" class="block px-3 py-2 rounded-lg text-gray-600 hover:bg-navy-50 transition-colors mobile-link">学堂</a>
                 <a href="tools.html" class="block px-3 py-2 rounded-lg text-gray-600 hover:bg-navy-50 transition-colors mobile-link">工具</a>
                 <button id="mobileLogin" class="block px-3 py-2 rounded-lg bg-navy-600 text-white text-center hover:bg-navy-700 transition-colors mobile-link">登录</button>
@@ -109,58 +103,44 @@
         </div>
     </nav>
 
-    <!-- ===== HOME / HERO + 最新交易预览 ===== -->
-    <section id="home" class="pt-28 pb-16 sm:pt-32 sm:pb-20 bg-white">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Simple Hero -->
-            <div class="text-center fade-up mb-16">
-                <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-navy-50 rounded-full text-xs font-medium text-navy-600 mb-6">
-                    <span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
-                    生物医药商务拓展
+    <!-- ===== 交易详情 ===== -->
+    <section class="pt-28 pb-16 sm:pt-32 sm:pb-20 bg-gray-50 scroll-mt-16">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <a href="news.html" class="inline-flex items-center gap-1 text-sm font-medium text-gray-400 hover:text-navy-600 mb-6 transition-colors">← 返回交易动态</a>
+
+            <!-- 核心内容（脚本填充） -->
+            <div id="detailContent" class="bg-white border border-gray-200 rounded-2xl p-6 sm:p-8 shadow-sm"></div>
+
+            <!-- 相关链接 -->
+            <div class="mt-8">
+                <div class="flex items-center gap-2 mb-4">
+                    <h2 class="text-lg font-bold text-navy-800">相关链接</h2>
                 </div>
-                <h1 class="text-4xl sm:text-5xl font-bold text-navy-800 tracking-tight">BD之家</h1>
-                <p class="mt-4 text-lg text-gray-500 max-w-xl mx-auto">聚焦生物医药 BD，汇集行业交易动态与商务拓展资讯</p>
-                <div class="mt-6 flex items-center justify-center gap-3">
-                    <button id="heroRegister" class="px-6 py-3 bg-emerald-600 text-white font-semibold rounded-xl hover:bg-emerald-700 transition-all active:scale-[0.98]">免费注册</button>
-                    <a href="news.html" class="px-6 py-3 border border-navy-200 text-navy-600 font-semibold rounded-xl hover:bg-navy-50 transition-all">浏览交易动态</a>
-                </div>
+                <div id="detailLinks" class="space-y-2"></div>
+                <p class="mt-3 text-xs text-gray-400">提示：可在 <code class="px-1 bg-gray-100 rounded">news-data.js</code> 中为每条新闻补充 <code class="px-1 bg-gray-100 rounded">licenserPr</code> / <code class="px-1 bg-gray-100 rounded">licenseePr</code> / <code class="px-1 bg-gray-100 rounded">exchange</code> 链接，会自动出现在此处。</p>
             </div>
 
-            <!-- 首页：仅展示最新 3 条，完整筛选列表见 news.html -->
-            <div id="newsTeaser" class="scroll-mt-20">
-                <div class="flex items-end justify-between mb-8 fade-up">
-                    <div>
-                        <span class="text-xs font-semibold text-navy-500 uppercase tracking-widest">Latest Deals</span>
-                        <h2 class="text-2xl sm:text-3xl font-bold text-navy-800 mt-2">最新交易动态</h2>
-                        <div class="accent-line mt-3"></div>
+            <!-- 讨论区 / 论坛 -->
+            <section id="comments" class="mt-12 bg-white border border-gray-200 rounded-2xl p-5 sm:p-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <h2 class="text-lg font-bold text-navy-800">讨论区 <span id="commentCount" class="text-sm font-normal text-gray-400"></span></h2>
+                    <span id="commentMode" class="ml-auto text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-400"></span>
+                </div>
+
+                <div id="commentLoginPrompt" class="hidden flex items-center justify-between gap-3 px-4 py-3 rounded-xl bg-navy-50 text-sm text-navy-700">
+                    <span>登录后即可参与讨论</span>
+                    <button id="commentLoginBtn" class="px-4 py-2 bg-navy-600 text-white rounded-lg text-sm font-medium hover:bg-navy-700 transition-colors">登录</button>
+                </div>
+
+                <form id="commentForm" class="hidden space-y-3">
+                    <textarea id="commentInput" rows="3" placeholder="分享你的看法，理性讨论…" class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm input-focus resize-none"></textarea>
+                    <div class="flex justify-end">
+                        <button type="submit" class="px-5 py-2.5 bg-navy-600 text-white font-semibold rounded-xl hover:bg-navy-700 text-sm transition-colors">发表评论</button>
                     </div>
-                    <a href="news.html" class="hidden sm:inline-flex items-center gap-1 text-sm font-semibold text-navy-600 hover:text-navy-800 shrink-0 ml-4">查看全部 →</a>
-                </div>
-                <div id="newsTeaserGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-                <div class="mt-6 sm:hidden">
-                    <a href="news.html" class="block text-center text-sm font-semibold text-navy-600 hover:text-navy-800">查看全部交易动态 →</a>
-                </div>
-            </div>
-        </div>
-    </section>
+                </form>
 
-    <!-- ===== 工具预览（占位，预留位置） ===== -->
-    <section id="toolsPreview" class="py-16 sm:py-20 bg-gray-50 scroll-mt-16">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-end justify-between mb-8 fade-up">
-                <div>
-                    <span class="text-xs font-semibold text-navy-500 uppercase tracking-widest">Tools</span>
-                    <h2 class="text-2xl sm:text-3xl font-bold text-navy-800 mt-2">实用工具</h2>
-                    <div class="accent-line mt-3"></div>
-                </div>
-                <a href="tools.html" class="hidden sm:inline-flex items-center gap-1 text-sm font-semibold text-navy-600 hover:text-navy-800 shrink-0 ml-4">查看全部 →</a>
-            </div>
-            <div class="fade-up empty-box rounded-2xl py-16 text-center bg-white">
-                <svg class="w-12 h-12 text-gray-300 mx-auto mb-4" width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1 1v1a2 2 0 11-4 0v-1a1 1 0 00-1-1H7a1 1 0 01-1-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"/>
-                </svg>
-                <p class="text-gray-400 text-sm">内容筹备中，敬请期待</p>
-            </div>
+                <div id="commentList" class="mt-2"></div>
+            </section>
         </div>
     </section>
 
@@ -189,13 +169,11 @@
                 </button>
             </div>
 
-            <!-- Tabs -->
             <div class="flex px-6 pt-4 gap-6 border-b border-gray-100">
                 <button data-tab="login" class="pb-3 text-sm font-semibold text-navy-700 border-b-2 border-navy-600 -mb-px transition-colors">登录</button>
                 <button data-tab="register" class="pb-3 text-sm font-medium text-gray-400 border-b-2 border-transparent transition-colors">注册</button>
             </div>
 
-            <!-- 登录 -->
             <form id="loginForm" class="p-6 space-y-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">邮箱</label>
@@ -213,7 +191,6 @@
                 <p class="text-xs text-gray-400 text-center">注册即表示同意服务条款</p>
             </form>
 
-            <!-- 注册 -->
             <form id="registerForm" class="p-6 space-y-4 hidden">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">邮箱</label>
@@ -243,21 +220,98 @@
     <!-- ===== SHARED SCRIPT ===== -->
     <script src="site.js"></script>
 
-    <!-- ===== 首页预览渲染（最新 3 条） ===== -->
+    <!-- ===== 详情渲染 + 评论初始化 ===== -->
     <script>
         (function () {
-            var grid = document.getElementById('newsTeaserGrid');
-            if (!grid || !window.BD) return;
-            var NEWS = window.BD.news();
-            var latest = NEWS.slice().sort(function (a, b) {
-                return String(b.date || '').localeCompare(String(a.date || ''));
-            }).slice(0, 3);
-            if (latest.length === 0) {
-                grid.innerHTML = '<div class="col-span-full text-center text-sm text-gray-400 py-8">暂无交易动态。</div>';
+            var BD = window.BD || {};
+            function esc(s) {
+                return (s == null ? '' : String(s)).replace(/[&<>"']/g, function (c) {
+                    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+                });
+            }
+            // 与 site.js 中 buildSummary 保持一致（本地独立副本，确保 Supabase 不可用时内容仍可渲染）
+            function buildSummary(n) {
+                var parts = [];
+                var lic = (n.licenser || '').trim();
+                var lee = (n.licensee || '').trim();
+                var parties = [lic, lee].filter(Boolean).join(' 与 ');
+                var deal = n.coop || '交易';
+                var head;
+                if (parties) {
+                    head = (n.date ? n.date + '，' : '') + parties + ' 就 ' + deal + '达成合作';
+                } else {
+                    head = (n.date ? n.date + '，' : '') + '一笔 ' + deal + '交易完成';
+                }
+                parts.push(head + '。');
+                var sub = [n.productType, n.indication].filter(Boolean).map(function (s) { return s.trim(); }).join('、');
+                if (n.product) {
+                    parts.push('交易标的为 ' + n.product + (sub ? '（' + sub + '）' : '') + '。');
+                }
+                if (n.stage) parts.push('项目当前处于 ' + n.stage + ' 阶段。');
+                var moneyBits = [];
+                if (n.upfront) moneyBits.push('首付款 ' + n.upfront + (n.upfrontType ? '（' + n.upfrontType + '）' : ''));
+                if (n.totalValue) moneyBits.push('潜在总交易额 ' + n.totalValue);
+                if (moneyBits.length) parts.push(moneyBits.join('，') + '。');
+                if (n.territory) parts.push('合作地域覆盖 ' + n.territory + '。');
+                if (n.notes && n.notes.trim()) parts.push(n.notes.trim());
+                return parts.join('');
+            }
+            var CAT_BADGE = BD.CAT_BADGE || { '肿瘤': 'bg-navy-50 text-navy-600', '自免': 'bg-emerald-50 text-emerald-600', '代谢': 'bg-amber-50 text-amber-600' };
+
+            function getParam(name) {
+                var m = new RegExp('[?&]' + name + '=([^&]*)').exec(location.search);
+                return m ? decodeURIComponent(m[1]) : null;
+            }
+            var id = getParam('id');
+            var NEWS = window.NEWS_DATA || [];
+            var n = NEWS.filter(function (x) { return String(x.id) === String(id); })[0];
+            var contentEl = document.getElementById('detailContent');
+
+            if (!n) {
+                contentEl.innerHTML = '<div class="text-center py-16"><p class="text-gray-400">未找到该交易动态。</p><a href="news.html" class="mt-4 inline-block text-navy-600 font-semibold">← 返回交易动态</a></div>';
                 return;
             }
-            grid.innerHTML = latest.map(window.BD.newsCard).join('');
-            window.BD.observeFade(grid);
+
+            var badge = CAT_BADGE[n.category] || 'bg-navy-50 text-navy-600';
+            var chips = [];
+            if (n.licenser || n.licensee) chips.push([n.licenser, n.licensee].filter(Boolean).join(' → '));
+            if (n.stage) chips.push(n.stage);
+            if (n.productType) chips.push(n.productType);
+            if (n.indication) chips.push(n.indication);
+            contentEl.innerHTML =
+                '<div class="flex items-center gap-2 mb-3">' +
+                    '<span class="px-2 py-0.5 rounded text-xs font-medium ' + badge + '">' + esc(n.category) + '</span>' +
+                    '<span class="text-xs text-gray-400">' + esc(n.date || '') + '</span>' +
+                '</div>' +
+                '<h1 class="text-2xl sm:text-3xl font-bold text-navy-800 leading-snug">' + esc(n.product || '未披露产品') + '</h1>' +
+                (chips.length ? '<div class="mt-3 flex flex-wrap gap-2">' + chips.map(function (c) { return '<span class="px-2 py-1 bg-gray-100 text-gray-600 rounded text-xs">' + esc(c) + '</span>'; }).join('') + '</div>' : '') +
+                '<p class="mt-5 text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">' + esc((BD.buildSummary ? BD.buildSummary(n) : buildSummary(n)) || '暂无内容摘要。') + '</p>';
+
+            // 相关链接
+            var linksEl = document.getElementById('detailLinks');
+            if (linksEl) {
+                function row(label, url) {
+                    if (url) {
+                        return '<a href="' + esc(url) + '" target="_blank" rel="noopener" class="flex items-center justify-between gap-3 px-4 py-3 rounded-xl border border-gray-200 hover:border-navy-300 hover:bg-navy-50/50 transition-colors group">' +
+                            '<span class="text-sm text-gray-600">' + esc(label) + '</span>' +
+                            '<span class="inline-flex items-center gap-1 text-sm font-medium text-navy-600 group-hover:underline">打开 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg></span>' +
+                            '</a>';
+                    }
+                    return '<div class="flex items-center justify-between gap-3 px-4 py-3 rounded-xl border border-dashed border-gray-200">' +
+                        '<span class="text-sm text-gray-500">' + esc(label) + '</span>' +
+                        '<span class="text-xs text-gray-300">待补充</span>' +
+                        '</div>';
+                }
+                var rows = '';
+                rows += row('原文出处', n.source);
+                rows += row('授权方 PR 稿件', n.licenserPr);
+                rows += row('引进方 PR 稿件', n.licenseePr);
+                rows += row('交易所公告', n.exchange);
+                linksEl.innerHTML = rows;
+            }
+
+            // 评论 / 论坛
+            if (window.BD && window.BD.initComments) window.BD.initComments(String(n.id));
         })();
     </script>
 </body>
