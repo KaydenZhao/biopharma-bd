@@ -127,11 +127,8 @@
                             <input id="targetInput" list="targetList" placeholder="如 EGFR / PD-1 / CLDN18.2"
                                 class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm input-focus transition-all" autocomplete="off">
                             <datalist id="targetList"></datalist>
-                            <div class="mt-3 grid grid-cols-2 gap-3">
-                                <button id="targetBtn" class="px-3 py-3 bg-navy-600 text-white font-semibold rounded-xl hover:bg-navy-700 transition-all active:scale-[0.98] text-sm">本地统计</button>
-                                <button id="targetAiBtn" class="px-3 py-3 bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-semibold rounded-xl hover:opacity-90 transition-all active:scale-[0.98] text-sm">🤖 AI 联网调研</button>
-                            </div>
-                            <p class="mt-3 text-xs text-gray-400 leading-relaxed">在站内 <span id="targetTotal" class="font-semibold text-navy-500">—</span> 条 BD 交易数据库中，按靶点 / 产品模糊匹配相关交易，汇总交易趋势与参与方。「AI 联网调研」会调用 DeepSeek 并结合公开搜索生成简报。</p>
+                            <button id="targetAiBtn" class="mt-3 w-full px-3 py-3 bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-semibold rounded-xl hover:opacity-90 transition-all active:scale-[0.98] text-sm">🤖 AI 联网分析</button>
+                            <p class="mt-3 text-xs text-gray-400 leading-relaxed">输入靶点 / 产品关键词，点击「AI 联网分析」，工具将调用 DeepSeek 并结合公开搜索（DuckDuckGo）生成一份结构化调研简报与参考来源。需先在右下角「AI 配置」填写 DeepSeek Key。</p>
                         </div>
                     </div>
                     <div class="lg:col-span-2" id="targetResult">
@@ -224,7 +221,7 @@
                             <h3 class="text-sm font-bold text-navy-700">生成结果</h3>
                             <div class="flex gap-2">
                                 <button id="tsCopy" class="px-3 py-1.5 text-xs font-medium text-navy-600 border border-navy-200 rounded-lg hover:bg-navy-50 transition-colors hidden">复制</button>
-                                <button id="tsDownload" class="px-3 py-1.5 text-xs font-medium text-navy-600 border border-navy-200 rounded-lg hover:bg-navy-50 transition-colors hidden">下载 .txt</button>
+                                <button id="tsDownload" class="px-3 py-1.5 text-xs font-medium text-navy-600 border border-navy-200 rounded-lg hover:bg-navy-50 transition-colors hidden">下载 Word</button>
                                 <button id="tsAi" class="px-3 py-1.5 text-xs font-medium text-white bg-gradient-to-r from-violet-600 to-indigo-600 rounded-lg hover:opacity-90 transition-colors hidden">🤖 AI 润色</button>
                             </div>
                         </div>
@@ -367,8 +364,6 @@
         });
 
         // ===== 靶点调研 =====
-        var totalEl = document.getElementById('targetTotal');
-        if (totalEl) totalEl.textContent = DATA.length;
         // 填充 datalist（去重真实靶点）
         var tl = document.getElementById('targetList');
         if (tl) {
@@ -379,65 +374,10 @@
             });
             tl.innerHTML = opts;
         }
-        function renderTarget(q) {
-            var res = document.getElementById('targetResult');
-            var deals = DATA.filter(function (d) {
-                return d.product && d.product.toLowerCase().indexOf(q.toLowerCase()) >= 0;
-            });
-            if (!deals.length) {
-                res.innerHTML = '<div class="rounded-2xl border border-dashed border-gray-200 py-16 text-center text-gray-400 text-sm">未找到与「' + esc(q) + '」相关的交易。</div>';
-                return;
-            }
-            // 统计
-            var lic = {}, lee = {}, ptype = {}, cat = {};
-            var minDate = '', maxDate = '';
-            deals.forEach(function (d) {
-                if (d.licenser) lic[d.licenser] = 1;
-                if (d.licensee) lee[d.licensee] = 1;
-                if (d.productType) ptype[d.productType] = 1;
-                if (d.category) cat[d.category] = 1;
-                if (d.date) {
-                    if (!minDate || d.date < minDate) minDate = d.date;
-                    if (!maxDate || d.date > maxDate) maxDate = d.date;
-                }
-            });
-            function tagObj(o) {
-                return Object.keys(o).map(function (k) {
-                    return '<span class="px-2 py-0.5 bg-navy-50 text-navy-600 rounded text-xs">' + esc(k) + '</span>';
-                }).join(' ');
-            }
-            var list = deals.map(function (d) {
-                var src = d.source ? '<a href="' + esc(d.source) + '" target="_blank" rel="noopener" class="text-xs text-navy-500 hover:underline">出处 ↗</a>' : '';
-                return '<div class="flex items-start justify-between gap-3 px-4 py-3 rounded-xl border border-gray-200 hover:border-navy-300 transition-colors">' +
-                    '<div><div class="text-sm text-navy-800 font-medium">' + esc(d.product || '未披露') + (d.productType ? ' <span class="text-xs text-gray-400 font-normal">· ' + esc(d.productType) + '</span>' : '') + '</div>' +
-                    '<div class="text-xs text-gray-500 mt-1">' + esc(d.date || '') + ' ｜ ' + esc(d.licenser || '—') + ' → ' + esc(d.licensee || '—') + '</div></div>' +
-                    '<div class="shrink-0">' + src + '</div></div>';
-            }).join('');
-            res.innerHTML =
-                '<div class="space-y-4">' +
-                '<div class="grid grid-cols-2 sm:grid-cols-4 gap-3">' +
-                statCard('相关交易', deals.length + ' 笔') +
-                statCard('时间跨度', (minDate && maxDate) ? (minDate + ' ~ ' + maxDate) : '—') +
-                statCard('授权方', Object.keys(lic).length + ' 家') +
-                statCard('引进方', Object.keys(lee).length + ' 家') +
-                '</div>' +
-                '<div class="bg-gray-50 rounded-2xl p-5 border border-gray-100">' +
-                '<div class="text-xs font-semibold text-gray-500 mb-2">参与公司</div><div class="flex flex-wrap gap-2">' + tagObj(lic) + ' ' + tagObj(lee) + '</div>' +
-                '<div class="text-xs font-semibold text-gray-500 mt-4 mb-2">产品类型 / 领域</div><div class="flex flex-wrap gap-2">' + tagObj(ptype) + ' ' + tagObj(cat) + '</div>' +
-                '</div>' +
-                '<div class="space-y-2">' + list + '</div>' +
-                '</div>';
-        }
-        function statCard(label, val) {
-            return '<div class="bg-navy-50 rounded-xl p-4"><div class="text-xs text-navy-500">' + label + '</div><div class="text-lg font-bold text-navy-800 mt-1">' + esc(val) + '</div></div>';
-        }
-        var tBtn = document.getElementById('targetBtn');
         var tInput = document.getElementById('targetInput');
-        if (tBtn) tBtn.addEventListener('click', function () {
-            var q = tInput.value.trim();
-            if (q) renderTarget(q);
+        if (tInput) tInput.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') { var b = document.getElementById('targetAiBtn'); if (b) b.click(); }
         });
-        if (tInput) tInput.addEventListener('keydown', function (e) { if (e.key === 'Enter') { var q = tInput.value.trim(); if (q) renderTarget(q); } });
 
         // ===== Termsheet 撰写 =====
         function genTermsheet() {
@@ -501,10 +441,13 @@
         });
         var tsDown = document.getElementById('tsDownload');
         if (tsDown) tsDown.addEventListener('click', function () {
-            var blob = new Blob([window.__tsText || ''], { type: 'text/plain;charset=utf-8' });
+            var text = window.__tsText || '';
+            var styled = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            var html = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Termsheet</title></head><body><pre style=\"font-family:'Microsoft YaHei',sans-serif;font-size:12pt;white-space:pre-wrap;\">" + styled + "</pre></body></html>";
+            var blob = new Blob([String.fromCharCode(65279) + html], { type: 'application/msword;charset=utf-8' });
             var a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
-            a.download = 'Termsheet_' + (document.getElementById('tsProduct').value.trim() || 'draft') + '.txt';
+            a.download = 'Termsheet_' + (document.getElementById('tsProduct').value.trim() || 'draft') + '.doc';
             a.click();
         });
 
@@ -635,7 +578,7 @@
             var q = tInput.value.trim();
             if (!q) { alert('请输入靶点 / 产品关键词'); return; }
             var res = document.getElementById('targetResult');
-            res.innerHTML = '<div class="rounded-2xl border border-dashed border-gray-200 py-16 text-center text-gray-400 text-sm">正在联网搜索并调用 DeepSeek 生成调研报告…</div>';
+            res.innerHTML = '<div class="rounded-2xl border border-dashed border-gray-200 py-16 text-center text-gray-400 text-sm">正在联网搜索并调用 DeepSeek 生成分析报告…</div>';
             var deals = DATA.filter(function (d) { return d.product && d.product.toLowerCase().indexOf(q.toLowerCase()) >= 0; });
             return BD_AI.webSearch(q + ' 靶点 药物 BD 交易 临床 进展', 6).then(function (sr) {
                 var localBrief = deals.map(function (d) {
