@@ -48,6 +48,37 @@
         .tool-btn.active { background: #1e3a5f; color: #fff; border-color: #1e3a5f; }
         .tool-btn:not(.active):hover { border-color: #7e99c9; color: #1e3a5f; }
         .ts-box { background: #f8fafc; border: 1px solid #e2e8f0; }
+        /* ===== 对话式 AI ===== */
+        .chat-shell { display: flex; flex-direction: column; height: 580px; border: 1px solid #e2e8f0; border-radius: 1rem; background: #fff; overflow: hidden; }
+        .chat-msgs { flex: 1; overflow: auto; padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem; background: linear-gradient(180deg, #fafbff, #fff); }
+        .chat-empty { margin: auto; text-align: center; color: #9ca3af; font-size: .875rem; line-height: 1.6; }
+        .chat-suggest-wrap { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1rem; justify-content: center; }
+        .chat-suggest { padding: .4rem .8rem; background: #fff; border: 1px solid #cbd5e1; border-radius: 9999px; font-size: .75rem; color: #1e3a5f; cursor: pointer; transition: all .15s ease; }
+        .chat-suggest:hover { background: #eef2f8; border-color: #7e99c9; }
+        .msg-row { display: flex; }
+        .msg-row.user { justify-content: flex-end; }
+        .msg-row.ai { justify-content: flex-start; flex-direction: column; align-items: flex-start; }
+        .bubble { max-width: 82%; padding: .75rem 1rem; border-radius: 1rem; font-size: .9rem; line-height: 1.65; word-break: break-word; }
+        .bubble.user { background: linear-gradient(135deg, #1e3a5f, #3b5d9a); color: #fff; border-bottom-right-radius: .25rem; }
+        .bubble.ai { background: #fff; border: 1px solid #e2e8f0; color: #1f2937; border-bottom-left-radius: .25rem; box-shadow: 0 1px 2px rgba(30,58,95,.04); }
+        .bubble.ai h1, .bubble.ai h2, .bubble.ai h3 { font-weight: 700; margin: .55rem 0 .35rem; color: #162c47; line-height: 1.35; }
+        .bubble.ai h1 { font-size: 1.05rem; } .bubble.ai h2 { font-size: .98rem; } .bubble.ai h3 { font-size: .92rem; }
+        .bubble.ai ul, .bubble.ai ol { margin: .35rem 0 .35rem 1.15rem; list-style: revert; padding-left: .25rem; }
+        .bubble.ai p { margin: .4rem 0; }
+        .bubble.ai pre { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: .5rem; padding: .6rem .75rem; overflow: auto; font-size: .8rem; }
+        .bubble.ai code { background: #eef2f8; padding: .05rem .3rem; border-radius: .25rem; font-size: .85em; }
+        .bubble.ai table { border-collapse: collapse; width: 100%; margin: .4rem 0; font-size: .8rem; }
+        .bubble.ai th, .bubble.ai td { border: 1px solid #e2e8f0; padding: .35rem .5rem; text-align: left; }
+        .bubble.ai th { background: #f1f5f9; }
+        .msg-src { max-width: 82%; margin: -.5rem 0 .25rem; display: flex; flex-direction: column; gap: .15rem; }
+        .msg-src a { font-size: .7rem; color: #5377b7; text-decoration: underline; }
+        .typing { color: #94a3b8; font-style: italic; }
+        .chat-compose { display: flex; gap: .5rem; padding: .75rem; border-top: 1px solid #e2e8f0; background: #fff; align-items: flex-end; }
+        .chat-compose textarea { flex: 1; resize: none; border: 1px solid #e2e8f0; border-radius: .75rem; padding: .6rem .8rem; font-size: .875rem; max-height: 120px; line-height: 1.5; }
+        .chat-compose textarea:focus { border-color: #3b5d9a; box-shadow: 0 0 0 3px rgba(59,93,154,.12); outline: none; }
+        .chat-send { padding: .6rem 1.1rem; background: linear-gradient(135deg, #1e3a5f, #3b5d9a); color: #fff; border-radius: .75rem; font-size: .85rem; font-weight: 600; white-space: nowrap; }
+        .chat-send:hover { opacity: .9; }
+        .chat-send:disabled { opacity: .5; cursor: not-allowed; }
     </style>
 </head>
 <body class="font-sans text-gray-800 antialiased bg-white">
@@ -118,26 +149,33 @@
                 <!-- 右侧内容 -->
                 <div class="lg:col-span-4">
 
-            <!-- ===== 靶点调研 ===== -->
+            <!-- ===== 靶点调研（对话式） ===== -->
             <div data-panel="target" class="tool-panel fade-up">
-                <div class="grid lg:grid-cols-3 gap-6">
-                    <div class="lg:col-span-1">
-                        <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+                <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100 mb-4">
+                    <div class="flex flex-wrap items-end gap-3">
+                        <div class="flex-1 min-w-[200px]">
                             <label class="block text-sm font-medium text-gray-700 mb-2">靶点 / 产品关键词</label>
                             <input id="targetInput" list="targetList" placeholder="如 EGFR / PD-1 / CLDN18.2"
                                 class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm input-focus transition-all" autocomplete="off">
                             <datalist id="targetList"></datalist>
-                            <button id="targetAiBtn" class="mt-3 w-full px-3 py-3 bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-semibold rounded-xl hover:opacity-90 transition-all active:scale-[0.98] text-sm">🤖 AI 联网分析</button>
-                            <p class="mt-3 text-xs text-gray-400 leading-relaxed">输入靶点 / 产品关键词，点击「AI 联网分析」，工具将调用 DeepSeek 并结合公开搜索（DuckDuckGo）生成一份结构化调研简报与参考来源。需先在右下角「AI 配置」填写 DeepSeek Key。</p>
                         </div>
+                        <label class="flex items-center gap-2 text-sm text-gray-600 select-none cursor-pointer">
+                            <input id="targetSearch" type="checkbox" checked class="w-4 h-4 rounded border-gray-300 text-navy-600"> 联网搜索
+                        </label>
+                        <button id="targetStart" class="px-5 py-3 bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-semibold rounded-xl hover:opacity-90 transition-all active:scale-[0.98] text-sm">开始调研对话</button>
                     </div>
-                    <div class="lg:col-span-2" id="targetResult">
-                        <div class="rounded-2xl border border-dashed border-gray-200 py-16 text-center text-gray-400 text-sm">输入靶点关键词，查看相关交易调研</div>
+                    <p class="mt-3 text-xs text-gray-400 leading-relaxed">输入靶点关键词，点击「开始调研对话」，即可与 AI 多轮探讨该靶点的 BD 交易、临床与趋势；也可直接在下方输入框追问。需先在右下角「AI 配置」填写 DeepSeek Key。</p>
+                </div>
+                <div class="chat-shell">
+                    <div class="chat-msgs" data-chat="target"></div>
+                    <div class="chat-compose">
+                        <textarea data-input="target" rows="2" placeholder="继续向 AI 提问，例如：和 PD-1 相比，它的交易结构有什么不同？"></textarea>
+                        <button data-send="target" class="chat-send">发送</button>
                     </div>
                 </div>
             </div>
 
-            <!-- ===== 合同撰写 ===== -->
+            <!-- ===== 合同撰写（对话式） ===== -->
             <div data-panel="termsheet" class="tool-panel fade-up hidden">
                 <div class="grid lg:grid-cols-2 gap-6">
                     <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
@@ -222,80 +260,96 @@
                             <div class="flex gap-2">
                                 <button id="tsCopy" class="px-3 py-1.5 text-xs font-medium text-navy-600 border border-navy-200 rounded-lg hover:bg-navy-50 transition-colors hidden">复制</button>
                                 <button id="tsDownload" class="px-3 py-1.5 text-xs font-medium text-navy-600 border border-navy-200 rounded-lg hover:bg-navy-50 transition-colors hidden">下载 Word</button>
-                                <button id="tsAi" class="px-3 py-1.5 text-xs font-medium text-white bg-gradient-to-r from-violet-600 to-indigo-600 rounded-lg hover:opacity-90 transition-colors hidden">🤖 AI 润色</button>
+                                <button id="tsToChat" class="px-3 py-1.5 text-xs font-medium text-white bg-gradient-to-r from-violet-600 to-indigo-600 rounded-lg hover:opacity-90 transition-colors hidden">生成并进入 AI 对话</button>
                             </div>
                         </div>
-                        <pre id="tsOutput" class="ts-box rounded-2xl p-5 text-xs leading-relaxed text-gray-700 whitespace-pre-wrap min-h-[420px] overflow-auto">填写左侧要素后点击「生成 Termsheet」。</pre>
+                        <pre id="tsOutput" class="ts-box rounded-2xl p-5 text-xs leading-relaxed text-gray-700 whitespace-pre-wrap min-h-[200px] overflow-auto">填写左侧要素后点击「生成 Termsheet」。</pre>
+                    </div>
+                </div>
+                <div class="chat-shell mt-4">
+                    <div class="chat-msgs" data-chat="termsheet"></div>
+                    <div class="chat-compose">
+                        <textarea data-input="termsheet" rows="2" placeholder="就这份 Termsheet 继续与 AI 讨论，例如：首付款设多少更合理？"></textarea>
+                        <button data-send="termsheet" class="chat-send">发送</button>
                     </div>
                 </div>
             </div>
 
-            <!-- ===== 合同审查 ===== -->
+            <!-- ===== 合同审查（对话式） ===== -->
             <div data-panel="review" class="tool-panel fade-up hidden">
-                <div class="grid lg:grid-cols-2 gap-6">
-                    <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
-                        <h3 class="text-sm font-bold text-navy-700 mb-4">粘贴 Termsheet / 交易公告文本</h3>
-                        <textarea id="reviewInput" rows="16" placeholder="将一份 Termsheet 或交易公告正文粘贴到这里……"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm input-focus transition-all resize-y font-mono"></textarea>
-                        <div class="mt-3 grid grid-cols-2 gap-3">
-                            <button id="reviewBtn" class="px-3 py-3 bg-navy-600 text-white font-semibold rounded-xl hover:bg-navy-700 transition-all active:scale-[0.98] text-sm">规则审查</button>
-                            <button id="reviewAi" class="px-3 py-3 bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-semibold rounded-xl hover:opacity-90 transition-all active:scale-[0.98] text-sm">🤖 AI 深度审查</button>
-                        </div>
-                        <p class="mt-3 text-xs text-gray-400 leading-relaxed">系统按 BD 交易关键条款清单逐条核验（交易主体、标的、财务条款、地域、交割、IP、保密、终止、争议解决等），并给出完整度评分与风险提示。</p>
+                <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100 mb-4">
+                    <h3 class="text-sm font-bold text-navy-700 mb-4">粘贴 Termsheet / 交易公告文本</h3>
+                    <textarea id="reviewInput" rows="8" placeholder="将一份 Termsheet 或交易公告正文粘贴到这里……"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm input-focus transition-all resize-y font-mono"></textarea>
+                    <div class="mt-3 grid grid-cols-2 gap-3">
+                        <button id="reviewBtn" class="px-3 py-3 bg-navy-600 text-white font-semibold rounded-xl hover:bg-navy-700 transition-all active:scale-[0.98] text-sm">规则审查</button>
+                        <button id="reviewSeed" class="px-3 py-3 bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-semibold rounded-xl hover:opacity-90 transition-all active:scale-[0.98] text-sm">🤖 AI 深度审查对话</button>
                     </div>
-                    <div>
-                        <div id="reviewScore" class="rounded-2xl border border-dashed border-gray-200 py-16 text-center text-gray-400 text-sm">审查结果将显示在这里</div>
+                    <p class="mt-3 text-xs text-gray-400 leading-relaxed">「规则审查」按 BD 交易关键条款清单逐条核验并评分；「AI 深度审查对话」将文本送入 AI 进行多轮深度审查与追问。</p>
+                    <div id="reviewScore" class="mt-3 rounded-2xl border border-dashed border-gray-200 py-10 text-center text-gray-400 text-sm">规则审查结果将显示在这里</div>
+                </div>
+                <div class="chat-shell">
+                    <div class="chat-msgs" data-chat="review"></div>
+                    <div class="chat-compose">
+                        <textarea data-input="review" rows="2" placeholder="就审查意见继续追问，例如：保密条款缺失会有什么后果？"></textarea>
+                        <button data-send="review" class="chat-send">发送</button>
                     </div>
                 </div>
             </div>
 
-            <!-- ===== 交易对比 ===== -->
+            <!-- ===== 交易对比（对话式） ===== -->
             <div data-panel="compare" class="tool-panel fade-up hidden">
-                <div class="grid lg:grid-cols-3 gap-6">
-                    <div class="lg:col-span-1">
-                        <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+                <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100 mb-4">
+                    <div class="grid lg:grid-cols-3 gap-6">
+                        <div class="lg:col-span-1">
                             <label class="block text-sm font-medium text-gray-700 mb-2">搜索交易</label>
                             <input id="cmpSearch" placeholder="按靶点 / 公司搜索……" autocomplete="off"
                                 class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm input-focus transition-all">
-                            <div id="cmpList" class="mt-3 space-y-2 max-h-[360px] overflow-auto"></div>
+                            <div id="cmpList" class="mt-3 space-y-2 max-h-[300px] overflow-auto"></div>
                             <p class="mt-3 text-xs text-gray-400">勾选 2–4 条交易加入对比。</p>
                         </div>
-                    </div>
-                    <div class="lg:col-span-2">
-                        <div class="flex items-center justify-between mb-3">
-                            <h3 class="text-sm font-bold text-navy-700">对比篮子（<span id="cmpCount">0</span>）</h3>
-                            <button id="cmpRun" class="px-4 py-2 bg-navy-600 text-white text-sm font-semibold rounded-xl hover:bg-navy-700 transition-all disabled:opacity-40" disabled>生成对比</button>
-                            <button id="cmpAi" class="px-4 py-2 bg-gradient-to-r from-violet-600 to-indigo-600 text-white text-sm font-semibold rounded-xl hover:opacity-90 transition-all disabled:opacity-40" disabled>🤖 AI 洞察</button>
+                        <div class="lg:col-span-2">
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="text-sm font-bold text-navy-700">对比篮子（<span id="cmpCount">0</span>）</h3>
+                                <div class="flex gap-2">
+                                    <button id="cmpRun" class="px-4 py-2 bg-navy-600 text-white text-sm font-semibold rounded-xl hover:bg-navy-700 transition-all disabled:opacity-40" disabled>生成对比表</button>
+                                    <button id="cmpSeed" class="px-4 py-2 bg-gradient-to-r from-violet-600 to-indigo-600 text-white text-sm font-semibold rounded-xl hover:opacity-90 transition-all disabled:opacity-40" disabled>🤖 AI 对比对话</button>
+                                </div>
+                            </div>
+                            <div id="cmpBasket" class="flex flex-wrap gap-2 mb-4"></div>
+                            <div id="cmpResult" class="rounded-2xl border border-dashed border-gray-200 py-10 text-center text-gray-400 text-sm">选择交易后点击「生成对比表」</div>
                         </div>
-                        <div id="cmpBasket" class="flex flex-wrap gap-2 mb-4"></div>
-                        <div id="cmpResult" class="rounded-2xl border border-dashed border-gray-200 py-16 text-center text-gray-400 text-sm">选择交易后点击「生成对比」</div>
+                    </div>
+                </div>
+                <div class="chat-shell">
+                    <div class="chat-msgs" data-chat="compare"></div>
+                    <div class="chat-compose">
+                        <textarea data-input="compare" rows="2" placeholder="就这几笔交易继续追问，例如：谁的出海策略更激进？"></textarea>
+                        <button data-send="compare" class="chat-send">发送</button>
                     </div>
                 </div>
             </div>
-                    <!-- ===== AI 翻译 ===== -->
+                    <!-- ===== AI 翻译（对话式） ===== -->
                     <div data-panel="translate" class="tool-panel fade-up hidden">
-                        <div class="grid lg:grid-cols-3 gap-6">
-                            <div class="lg:col-span-1">
-                                <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+                        <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100 mb-4">
+                            <div class="flex flex-wrap items-end gap-3">
+                                <div class="w-48">
                                     <label class="block text-sm font-medium text-gray-700 mb-2">翻译方向</label>
-                                    <select id="trDir" class="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm input-focus bg-white mb-3">
+                                    <select id="trDir" class="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm input-focus bg-white">
                                         <option value="zh2en">中文 → 英文</option>
                                         <option value="en2zh">英文 → 中文</option>
                                     </select>
-                                    <button id="trBtn" class="w-full px-4 py-3 bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-semibold rounded-xl hover:opacity-90 transition-all active:scale-[0.98] text-sm">🤖 AI 翻译</button>
-                                    <p class="mt-3 text-xs text-gray-400 leading-relaxed">粘贴 BD / 合同条款，调用 DeepSeek 进行专业医学与商务翻译。需在右下角「AI 配置」填写 DeepSeek Key。</p>
                                 </div>
+                                <button id="trSeed" class="px-5 py-3 bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-semibold rounded-xl hover:opacity-90 transition-all active:scale-[0.98] text-sm">🤖 翻译并对话</button>
                             </div>
-                            <div class="lg:col-span-2 space-y-4">
-                                <div>
-                                    <label class="block text-xs font-medium text-gray-500 mb-1">原文</label>
-                                    <textarea id="trSrc" rows="8" placeholder="在此粘贴需要翻译的文本……" class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm input-focus transition-all resize-y"></textarea>
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-medium text-gray-500 mb-1">译文</label>
-                                    <div id="trOut" class="min-h-[160px] rounded-2xl border border-gray-200 bg-gray-50 p-5 text-sm text-gray-700 whitespace-pre-wrap"></div>
-                                    <button id="trCopy" class="mt-3 px-3 py-1.5 text-xs font-medium text-navy-600 border border-navy-200 rounded-lg hover:bg-navy-50 transition-colors hidden">复制</button>
-                                </div>
+                            <textarea id="trSrc" rows="6" placeholder="在此粘贴需要翻译的文本……" class="w-full mt-3 px-4 py-3 border border-gray-300 rounded-xl text-sm input-focus transition-all resize-y"></textarea>
+                            <p class="mt-3 text-xs text-gray-400 leading-relaxed">粘贴文本后点击「翻译并对话」，译文会在对话中生成；可继续要求润色、统一术语或调整风格。需在右下角「AI 配置」填写 DeepSeek Key。</p>
+                        </div>
+                        <div class="chat-shell">
+                            <div class="chat-msgs" data-chat="translate"></div>
+                            <div class="chat-compose">
+                                <textarea data-input="translate" rows="2" placeholder="继续与 AI 讨论译文，例如：把这段改成更正式的法律英语"></textarea>
+                                <button data-send="translate" class="chat-send">发送</button>
                             </div>
                         </div>
                     </div>
@@ -385,6 +439,8 @@
             document.querySelectorAll('.tool-panel').forEach(function (p) {
                 p.classList.toggle('hidden', p.getAttribute('data-panel') !== name);
             });
+            var box = document.querySelector('[data-chat="' + name + '"]');
+            if (box && typeof renderChat === 'function') renderChat(name);
         }
         tabBtns.forEach(function (b) {
             b.addEventListener('click', function () { activate(b.getAttribute('data-tabbtn')); });
@@ -403,7 +459,7 @@
         }
         var tInput = document.getElementById('targetInput');
         if (tInput) tInput.addEventListener('keydown', function (e) {
-            if (e.key === 'Enter') { var b = document.getElementById('targetAiBtn'); if (b) b.click(); }
+            if (e.key === 'Enter') { var b = document.getElementById('targetStart'); if (b) b.click(); }
         });
 
         // ===== 合同撰写 =====
@@ -455,7 +511,7 @@
             document.getElementById('tsOutput').textContent = out;
             document.getElementById('tsCopy').classList.remove('hidden');
             document.getElementById('tsDownload').classList.remove('hidden');
-            document.getElementById('tsAi').classList.remove('hidden');
+            document.getElementById('tsToChat').classList.remove('hidden');
             window.__tsText = out;
         }
         var tsGen = document.getElementById('tsGenBtn');
@@ -554,7 +610,7 @@
             });
             var canCmp = ids.length >= 2;
             document.getElementById('cmpRun').disabled = !canCmp;
-            var cmpAiEl = document.getElementById('cmpAi'); if (cmpAiEl) cmpAiEl.disabled = !canCmp;
+            var cmpSeedEl = document.getElementById('cmpSeed'); if (cmpSeedEl) cmpSeedEl.disabled = !canCmp;
         }
         function renderCompare() {
             var ids = Object.keys(basket);
@@ -586,135 +642,152 @@
         if (cr) cr.addEventListener('click', renderCompare);
         renderCmpList(); renderBasket();
 
-        // ===== AI 增强（DeepSeek + 联网搜索，见 ai.js） =====
-        function runAI(btn, work) {
-            if (!window.BD_AI) { alert('AI 模块未加载'); return; }
-            BD_AI.ensureConfig(function () {
-                var orig = btn.textContent;
-                btn.disabled = true; btn.textContent = '生成中…';
-                Promise.resolve().then(work).then(function () {
-                    btn.disabled = false; btn.textContent = orig;
-                }).catch(function (err) {
-                    btn.disabled = false; btn.textContent = orig;
-                    var msg = (err && err.message === 'NO_KEY') ? '请先在右下角「AI 配置」填写 DeepSeek Key' : ('出错了：' + (err && err.message ? err.message : err));
-                    alert(msg);
-                });
-            });
-        }
+        // ===== AI 对话引擎（多轮 + RAG 知识库，见 ai.js） =====
         async function kbContext(query, k){
             try {
                 var ok = await BD_AI.loadKB();
                 if(!ok) return '';
                 var hits = BD_AI.retrieve(query, k || 6);
                 if(!hits.length) return '';
-                return '\n\n【补充参考资料 · 胖猫 BD 知识库（来源 IMA「胖猫」公开内容，仅供参考）】\n' + hits.join('\n\n---\n\n');
+                return '\n\n【补充参考资料 · BD 知识库（来源 IMA「胖猫」「医药笔记」公开内容，仅供参考）】\n' + hits.join('\n\n---\n\n');
             } catch(e){ return ''; }
         }
 
-        function targetAi() {
-            var q = tInput.value.trim();
-            if (!q) { alert('请输入靶点 / 产品关键词'); return; }
-            var res = document.getElementById('targetResult');
-            res.innerHTML = '<div class="rounded-2xl border border-dashed border-gray-200 py-16 text-center text-gray-400 text-sm">正在联网搜索并调用 DeepSeek 生成分析报告…</div>';
-            var deals = DATA.filter(function (d) { return d.product && d.product.toLowerCase().indexOf(q.toLowerCase()) >= 0; });
-            return Promise.resolve().then(function () { return kbContext(q + ' 靶点 BD 交易 授权 临床 趋势', 8); }).then(function (kb) {
-            return BD_AI.webSearch(q + ' 靶点 药物 BD 交易 临床 进展', 6).then(function (sr) {
-                var localBrief = deals.map(function (d) {
-                    return '- ' + [d.date, d.licenser, '→', d.licensee, d.product, d.coop].filter(Boolean).join(' ');
-                }).join('\n');
-                var searchBrief = sr.raw ? sr.raw.slice(0, 3500) : '(无搜索结果)';
-                var messages = [
-                    { role: 'system', content: '你是资深医药 / 生物科技 BD 分析师，擅长靶点调研与交易趋势分析。用中文，结构化、专业、客观，不编造数据，不确定处标注「需进一步核实」。' },
-                    { role: 'user', content: '请对靶点 / 产品「' + q + '」撰写一份 BD 调研简报。\n\n【站内 BD 交易库匹配到的相关交易】\n' + (localBrief || '(无)') + '\n\n【联网搜索到的公开资料（来自 DuckDuckGo，含噪音请甄别）】\n' + searchBrief + (kb ? ('\n\n' + kb) : '') + '\n\n要求：1) 靶点 / 产品概述 2) 相关 BD 交易趋势与特征 3) 主要参与方 4) 最新公开动态（基于联网资料）5) 对 BD 人员的启示与风险提示。' }
-                ];
-                return BD_AI.callDeepSeek(messages).then(function (report) {
-                    var src = sr.results.length ? '<div class="mt-4 bg-gray-50 rounded-2xl p-4 border border-gray-100"><div class="text-xs font-semibold text-gray-500 mb-2">参考来源（联网搜索）</div><div class="space-y-1">' + sr.results.map(function (r) { return '<a href="' + esc(r.href) + '" target="_blank" rel="noopener" class="block text-xs text-navy-500 hover:underline truncate">' + esc(r.title) + '</a>'; }).join('') + '</div></div>' : '';
-                    res.innerHTML = '<div class="space-y-4"><div class="bg-white rounded-2xl p-6 border border-navy-200">' + BD_AI.mdToHtml(report) + '</div>' + src + '</div>';
+        // 每个工具 = 一个对话角色（system prompt + RAG 关键词 + 是否联网）
+        var MODES = {
+            target:   { sys:'你是资深医药 / 生物科技 BD 分析师，擅长靶点调研与交易趋势分析。用中文，结构化、专业、客观，不编造数据，不确定处标注「需进一步核实」。', kb:'靶点 BD 交易 授权 临床 趋势', search:true },
+            termsheet:{ sys:'你是资深医药 BD 商务 / 法务专家。请在不改变任何数字与事实的前提下，将用户提供的 Termsheet / 交易要素润色、补全为专业严谨、可直接使用的 Term Sheet 文本，使用规范条款表述，保持中文。', kb:'Term Sheet 条款 首付款 里程碑 royalty 知识产权 保密 终止 定义' },
+            review:   { sys:'你是资深医药 BD 交易律师。请审查用户提供的 Termsheet / 交易公告，按 BD 交易关键条款清单（交易主体、标的、财务条款、地域、交割先决、排他、IP、保密、终止、争议解决、适用法律等）逐项评估完整度，指出缺失与风险，给出改进建议。中文，结构化。', kb:'审查 条款 完整度 风险 IP 知识产权 保密 终止 付款 地域 交割 排他 争议解决' },
+            compare:  { sys:'你是资深医药 BD 分析师。请对比用户给出的 BD 交易，从交易结构、金额特征、参与方策略、地域布局等角度给出洞察。中文，结构化。', kb:'交易对比 结构 金额 首付款 里程碑 地域 策略 估值 出海 授权' },
+            translate:{ sys:'', kb:'' }
+        };
+        var SUGGEST = {
+            target:['这个靶点的近期 BD 交易有哪些？','它的临床竞争格局如何？','License-out 与 License-in 在这个靶点上如何取舍？'],
+            termsheet:['首付款和里程碑怎么设更合理？','保密条款应包含哪些要点？','终止条款有哪些常见类型？'],
+            review:['这份条款有哪些法律风险？','知识产权条款是否完整？','交割先决条件是否缺失？'],
+            compare:['这几笔交易的金额结构差异？','哪笔交易的地域布局更优？','从策略角度如何评价？'],
+            translate:['把这段条款译成专业英文','术语如何保持一致？']
+        };
+        var convs = {};
+        function conv(mode){ if(!convs[mode]) convs[mode] = []; return convs[mode]; }
+        function translateSys(){
+            var dir = document.getElementById('trDir') ? document.getElementById('trDir').value : 'zh2en';
+            return dir === 'en2zh'
+                ? '你是资深医药 / 生物科技 BD 翻译专家，精通中英医学、药学、商务与法律术语。请将用户提供的英文 BD / 合同文本准确译为专业中文，保留条款结构与编号，不增删事实。'
+                : '你是资深医药 / 生物科技 BD 翻译专家，精通中英医学、药学、商务与法律术语。请将用户提供的中文 BD / 合同文本准确译为专业英文，保留条款结构与编号，不增删事实。';
+        }
+        function renderChat(mode){
+            var box = document.querySelector('[data-chat="' + mode + '"]');
+            if(!box) return;
+            var c = conv(mode);
+            if(!c.length){
+                var sg = (SUGGEST[mode] || []).map(function(s){ return '<button class="chat-suggest" data-q="' + esc(s) + '">' + esc(s) + '</button>'; }).join('');
+                box.innerHTML = '<div class="chat-empty">发送一条消息，开始与 AI 多轮对话。<div class="chat-suggest-wrap">' + sg + '</div></div>';
+                box.querySelectorAll('.chat-suggest').forEach(function(b){
+                    b.addEventListener('click', function(){ chatSend(mode, b.getAttribute('data-q')); });
+                });
+                return;
+            }
+            box.innerHTML = c.map(function(m){
+                if(m.role === 'user') return '<div class="msg-row user"><div class="bubble user">' + esc(m.content) + '</div></div>';
+                if(m._loading) return '<div class="msg-row ai"><div class="bubble ai typing">AI 正在思考…</div></div>';
+                var body = (window.BD_AI && BD_AI.mdToHtml) ? BD_AI.mdToHtml(m.content) : esc(m.content);
+                var src = (m.sources && m.sources.length) ? '<div class="msg-src">' + m.sources.map(function(r){ return '<a href="' + esc(r.href) + '" target="_blank" rel="noopener">' + esc(r.title) + ' ↗</a>'; }).join('') + '</div>' : '';
+                return '<div class="msg-row ai"><div class="bubble ai">' + body + '</div></div>' + src;
+            }).join('');
+            box.scrollTop = box.scrollHeight;
+        }
+        function chatSend(mode, text, opts){
+            opts = opts || {};
+            if(!window.BD_AI){ alert('AI 模块未加载'); return; }
+            var m = MODES[mode];
+            var sys = (mode === 'translate') ? translateSys() : m.sys;
+            var kbq = (mode === 'translate') ? '' : m.kb;
+            var sendBtn = document.querySelector('[data-send="' + mode + '"]');
+            var ta = document.querySelector('[data-input="' + mode + '"]');
+            BD_AI.ensureConfig(function(){
+                if(sendBtn) sendBtn.disabled = true;
+                if(ta) ta.disabled = true;
+                var c = conv(mode);
+                c.push({ role:'user', content:text });
+                renderChat(mode);
+                c.push({ role:'assistant', content:'', _loading:true });
+                var aiIdx = c.length - 1;
+                renderChat(mode);
+                var kbP = kbq ? kbContext(text + ' ' + kbq, 8) : Promise.resolve('');
+                var srP = (m.search && opts.search !== false) ? BD_AI.webSearch(text + ' 靶点 药物 BD 交易 临床 进展', 6) : Promise.resolve(null);
+                Promise.all([kbP, srP]).then(function(arr){
+                    var kb = arr[0], sr = arr[1];
+                    var uc = text + (kb ? ('\n\n' + kb) : '');
+                    if(sr && sr.raw) uc += '\n\n【联网搜索公开资料（来源 DuckDuckGo）】\n' + sr.raw.slice(0, 3500);
+                    var api = [{ role:'system', content:sys }]
+                        .concat(c.slice(0, -1).map(function(x){ return { role:x.role, content:x.content }; }))
+                        .concat([{ role:'user', content:uc }]);
+                    return BD_AI.callDeepSeek(api).then(function(out){
+                        c[aiIdx] = { role:'assistant', content:out, sources:(sr && sr.results) ? sr.results : [] };
+                        renderChat(mode);
+                    });
+                }).catch(function(err){
+                    var msg = (err && err.message === 'NO_KEY') ? '请先在右下角「AI 配置」填写 DeepSeek Key' : ('出错了：' + (err && err.message ? err.message : err));
+                    c[aiIdx] = { role:'assistant', content:'⚠️ ' + msg };
+                    renderChat(mode);
+                }).then(function(){
+                    if(sendBtn) sendBtn.disabled = false;
+                    if(ta) ta.disabled = false;
                 });
             });
-            });
         }
-        function tsAi() {
-            var draft = window.__tsText || document.getElementById('tsOutput').textContent;
-            if (!draft || draft.indexOf('请至少填写') >= 0) { alert('请先生成 Termsheet 草稿'); return; }
-            return Promise.resolve().then(function () { return kbContext(draft + ' Term Sheet 条款 首付款 里程碑 royalty 知识产权 保密 终止 定义', 6); }).then(function (kb) {
-            var messages = [
-                { role: 'system', content: '你是资深医药 BD 商务 / 法务专家。用户已填好一份 Termsheet 草稿要素，请在不改变任何数字与事实的前提下，将其润色、补全为专业、严谨、可直接使用的术语清单（Term Sheet）文本，使用规范条款表述，保持中文。' },
-                { role: 'user', content: '以下是草稿：\n' + draft + (kb ? ('\n\n' + kb) : '') + '\n\n请润色为正式 Term Sheet。' }
-            ];
-            return BD_AI.callDeepSeek(messages).then(function (out) {
-                document.getElementById('tsOutput').textContent = out;
-                window.__tsText = out;
-            });
-            });
-        }
-        function reviewAi() {
-            var text = document.getElementById('reviewInput').value;
-            if (!text.trim()) { alert('请先粘贴待审查文本'); return; }
-            var box = document.getElementById('reviewScore');
-            box.innerHTML = '<div class="text-gray-400 text-sm py-16 text-center">DeepSeek 深度审查中…</div>';
-            return Promise.resolve().then(function () { return kbContext(text + ' 审查 条款 完整度 风险 IP 知识产权 保密 终止 付款 地域 交割 排他 争议解决', 6); }).then(function (kb) {
-            var messages = [
-                { role: 'system', content: '你是资深医药 BD 交易律师。请审查用户提供的 Termsheet / 交易公告，按 BD 交易关键条款清单（交易主体、标的、财务条款、地域、交割先决、排他、IP、保密、终止、争议解决、适用法律等）逐项评估完整度，指出缺失与风险，并给出改进建议。中文，结构化。' },
-                { role: 'user', content: '待审查文本：\n' + text + (kb ? ('\n\n' + kb) : '') + '\n\n请输出结构化审查意见。' }
-            ];
-            return BD_AI.callDeepSeek(messages).then(function (out) {
-                box.innerHTML = '<div class="space-y-4"><h3 class="text-sm font-bold text-navy-700">AI 深度审查意见</h3><div class="bg-white rounded-2xl p-6 border border-navy-200">' + BD_AI.mdToHtml(out) + '</div></div>';
-            });
-            });
-        }
-        function cmpAi() {
-            var ids = Object.keys(basket);
-            if (ids.length < 2) { alert('请至少选择 2 条交易'); return; }
-            var deals = ids.map(function (id) { return DATA.filter(function (x) { return String(x.id) === String(id); })[0]; }).filter(Boolean);
-            var info = deals.map(function (d) { return '- ' + (d.product || '未披露') + ' | ' + (d.licenser || '?') + ' → ' + (d.licensee || '?') + ' | ' + (d.category || '') + ' | ' + (d.coop || '') + ' | ' + (d.upfront || '') + ' | ' + (d.territory || ''); }).join('\n');
-            var res = document.getElementById('cmpResult');
-            res.innerHTML = '<div class="rounded-2xl border border-dashed border-gray-200 py-16 text-center text-gray-400 text-sm">DeepSeek 正在生成对比洞察…</div>';
-            return Promise.resolve().then(function () { return kbContext(info + ' 交易对比 结构 金额 首付款 里程碑 地域 策略 估值 出海 授权', 6); }).then(function (kb) {
-            var messages = [
-                { role: 'system', content: '你是资深医药 BD 分析师。请对比以下 BD 交易，从交易结构、金额特征、参与方策略、地域布局等角度给出洞察。中文，结构化。' },
-                { role: 'user', content: '交易列表：\n' + info + (kb ? ('\n\n' + kb) : '') + '\n\n请给出对比洞察。' }
-            ];
-            return BD_AI.callDeepSeek(messages).then(function (out) {
-                res.innerHTML = '<div class="space-y-4"><h3 class="text-sm font-bold text-navy-700">AI 对比洞察</h3><div class="bg-white rounded-2xl p-6 border border-navy-200">' + BD_AI.mdToHtml(out) + '</div></div>';
-            });
-            });
-        }
-        var tAiBtn = document.getElementById('targetAiBtn');
-        if (tAiBtn) tAiBtn.addEventListener('click', function () { runAI(tAiBtn, targetAi); });
-        var tsAiBtn = document.getElementById('tsAi');
-        if (tsAiBtn) tsAiBtn.addEventListener('click', function () { runAI(tsAiBtn, tsAi); });
-        var rAiBtn = document.getElementById('reviewAi');
-        if (rAiBtn) rAiBtn.addEventListener('click', function () { runAI(rAiBtn, reviewAi); });
-        var cAiBtn = document.getElementById('cmpAi');
-        if (cAiBtn) cAiBtn.addEventListener('click', function () { runAI(cAiBtn, cmpAi); });
-
-        // ===== AI 翻译 =====
-        var trBtn = document.getElementById('trBtn');
-        if (trBtn) trBtn.addEventListener('click', function () {
-            var src = (document.getElementById('trSrc').value || '').trim();
-            var dir = document.getElementById('trDir').value;
-            if (!src) { alert('请先粘贴需要翻译的文本'); return; }
-            var out = document.getElementById('trOut');
-            out.textContent = '翻译中…';
-            var sys = dir === 'zh2en'
-                ? '你是资深医药 / 生物科技 BD 翻译专家，精通中英医学、药学、商务与法律术语。请将用户提供的中文 BD / 合同文本准确译为专业英文，保留条款结构与编号，不增删事实。'
-                : '你是资深医药 / 生物科技 BD 翻译专家，精通中英医学、药学、商务与法律术语。请将用户提供的英文 BD / 合同文本准确译为专业中文，保留条款结构与编号，不增删事实。';
-            var messages = [
-                { role: 'system', content: sys },
-                { role: 'user', content: '请翻译以下文本：\n' + src }
-            ];
-            runAI(trBtn, function () {
-                return BD_AI.callDeepSeek(messages).then(function (text) {
-                    out.textContent = text;
-                    document.getElementById('trCopy').classList.remove('hidden');
-                });
+        document.querySelectorAll('[data-send]').forEach(function(btn){
+            btn.addEventListener('click', function(){
+                var mode = btn.getAttribute('data-send');
+                var ta = document.querySelector('[data-input="' + mode + '"]');
+                var v = ta.value.trim(); if(!v) return;
+                ta.value = ''; chatSend(mode, v);
             });
         });
-        var trCopy = document.getElementById('trCopy');
-        if (trCopy) trCopy.addEventListener('click', function () {
-            var t = document.getElementById('trOut').textContent || '';
-            if (navigator.clipboard) navigator.clipboard.writeText(t);
+        document.querySelectorAll('[data-input]').forEach(function(ta){
+            ta.addEventListener('keydown', function(e){
+                if(e.key === 'Enter' && !e.shiftKey){
+                    e.preventDefault();
+                    var mode = ta.getAttribute('data-input');
+                    var v = ta.value.trim(); if(!v) return;
+                    ta.value = ''; chatSend(mode, v);
+                }
+            });
+        });
+
+        // 种子入口：把结构化输入作为开场白送入对话
+        var targetStart = document.getElementById('targetStart');
+        if(targetStart) targetStart.addEventListener('click', function(){
+            var q = document.getElementById('targetInput').value.trim();
+            if(!q){ alert('请输入靶点 / 产品关键词'); return; }
+            chatSend('target', '请对靶点 / 产品「' + q + '」撰写一份 BD 调研简报，并说明相关交易趋势、主要参与方与最新动态。', { search: document.getElementById('targetSearch').checked });
+        });
+        var tsToChat = document.getElementById('tsToChat');
+        if(tsToChat) tsToChat.addEventListener('click', function(){
+            genTermsheet();
+            var draft = window.__tsText;
+            if(!draft || draft.indexOf('请至少填写') >= 0){ alert('请先填写交易要素'); return; }
+            chatSend('termsheet', '以下是我根据交易要素拟的 Termsheet 草稿，请在不改动数字与事实的前提下润色、补全为正式 Term Sheet 文本，并说明关键条款设计要点：\n\n' + draft);
+        });
+        var reviewSeed = document.getElementById('reviewSeed');
+        if(reviewSeed) reviewSeed.addEventListener('click', function(){
+            var text = document.getElementById('reviewInput').value.trim();
+            if(!text){ alert('请先粘贴待审查文本'); return; }
+            chatSend('review', '请审查以下 Termsheet / 交易公告文本，逐条评估完整度、指出风险与缺失、给出改进建议：\n\n' + text);
+        });
+        var cmpSeed = document.getElementById('cmpSeed');
+        if(cmpSeed) cmpSeed.addEventListener('click', function(){
+            var ids = Object.keys(basket);
+            if(ids.length < 2){ alert('请至少选择 2 条交易'); return; }
+            var info = ids.map(function(id){ var d = DATA.filter(function(x){ return String(x.id) === String(id); })[0]; return d ? ('- ' + (d.product || '未披露') + ' | ' + (d.licenser || '?') + ' → ' + (d.licensee || '?') + ' | ' + (d.category || '') + ' | ' + (d.coop || '') + ' | ' + (d.upfront || '') + ' | ' + (d.territory || '')) : ''; }).filter(Boolean).join('\n');
+            chatSend('compare', '请对比以下 BD 交易，给出交易结构、金额特征、参与方策略与地域布局的洞察：\n' + info);
+        });
+        var trSeed = document.getElementById('trSeed');
+        if(trSeed) trSeed.addEventListener('click', function(){
+            var src = document.getElementById('trSrc').value.trim();
+            if(!src){ alert('请先粘贴需要翻译的文本'); return; }
+            chatSend('translate', '请翻译以下文本：\n' + src);
         });
 
         // ===== init from URL =====
