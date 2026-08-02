@@ -112,12 +112,11 @@
             <div id="detailContent" class="bg-white border border-gray-200 rounded-2xl p-6 sm:p-8 shadow-sm"></div>
 
             <!-- 相关链接 -->
-            <div class="mt-8">
+            <div id="linksSection" class="mt-8">
                 <div class="flex items-center gap-2 mb-4">
                     <h2 class="text-lg font-bold text-navy-800">相关链接</h2>
                 </div>
                 <div id="detailLinks" class="space-y-2"></div>
-                <p class="mt-3 text-xs text-gray-400">提示：可在 <code class="px-1 bg-gray-100 rounded">news-data.js</code> 中为每条新闻补充 <code class="px-1 bg-gray-100 rounded">licenserPr</code> / <code class="px-1 bg-gray-100 rounded">licenseePr</code> / <code class="px-1 bg-gray-100 rounded">exchange</code> 链接，会自动出现在此处。</p>
             </div>
 
             <!-- 讨论区 / 论坛 -->
@@ -291,23 +290,23 @@
             var linksEl = document.getElementById('detailLinks');
             if (linksEl) {
                 function row(label, url) {
-                    if (url) {
-                        return '<a href="' + esc(url) + '" target="_blank" rel="noopener" class="flex items-center justify-between gap-3 px-4 py-3 rounded-xl border border-gray-200 hover:border-navy-300 hover:bg-navy-50/50 transition-colors group">' +
-                            '<span class="text-sm text-gray-600">' + esc(label) + '</span>' +
-                            '<span class="inline-flex items-center gap-1 text-sm font-medium text-navy-600 group-hover:underline">打开 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg></span>' +
-                            '</a>';
-                    }
-                    return '<div class="flex items-center justify-between gap-3 px-4 py-3 rounded-xl border border-dashed border-gray-200">' +
-                        '<span class="text-sm text-gray-500">' + esc(label) + '</span>' +
-                        '<span class="text-xs text-gray-300">待补充</span>' +
-                        '</div>';
+                    if (!url || !url.trim()) return '';
+                    return '<a href="' + esc(url) + '" target="_blank" rel="noopener" class="flex items-center justify-between gap-3 px-4 py-3 rounded-xl border border-gray-200 hover:border-navy-300 hover:bg-navy-50/50 transition-colors group">' +
+                        '<span class="text-sm text-gray-600">' + esc(label) + '</span>' +
+                        '<span class="inline-flex items-center gap-1 text-sm font-medium text-navy-600 group-hover:underline">打开 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg></span>' +
+                        '</a>';
                 }
                 var rows = '';
                 rows += row('原文出处', n.source);
                 rows += row('授权方 PR 稿件', n.licenserPr);
                 rows += row('引进方 PR 稿件', n.licenseePr);
                 rows += row('交易所公告', n.exchange);
-                linksEl.innerHTML = rows;
+                if (rows.trim()) {
+                    linksEl.innerHTML = rows;
+                    document.getElementById('linksSection').classList.remove('hidden');
+                } else {
+                    document.getElementById('linksSection').classList.add('hidden');
+                }
             }
 
             // 评论 / 论坛
