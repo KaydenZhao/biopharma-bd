@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>工具 — BD之家</title>
-    <meta name="description" content="BD之家 · 工具，BD 实用工具筹备中">
+    <meta name="description" content="BD之家 · AI 工具：靶点调研、Termsheet 撰写与审查、交易对比。基于站内 BD 交易数据库智能检索与生成">
     <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -42,10 +42,12 @@
         .card-hover:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(30,58,95,0.10); }
         .accent-line { width: 44px; height: 3px; background: linear-gradient(90deg, #3b5d9a, #7e99c9); border-radius: 2px; }
         .input-focus:focus { border-color: #3b5d9a; box-shadow: 0 0 0 3px rgba(59,93,154,0.12); outline: none; }
-        .empty-box { border: 2px dashed #cbd5e1; }
-        .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
         .modal-card { animation: modalIn 0.25s ease-out; }
         @keyframes modalIn { from { opacity: 0; transform: translateY(12px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        .tool-btn { transition: all 0.2s ease; }
+        .tool-btn.active { background: #1e3a5f; color: #fff; border-color: #1e3a5f; }
+        .tool-btn:not(.active):hover { border-color: #7e99c9; color: #1e3a5f; }
+        .ts-box { background: #f8fafc; border: 1px solid #e2e8f0; }
     </style>
 </head>
 <body class="font-sans text-gray-800 antialiased bg-white">
@@ -54,7 +56,6 @@
     <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 glass-nav bg-white/85 border-b border-gray-100 transition-all duration-300">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
-                <!-- Logo -->
                 <a href="index.html" class="flex items-center gap-2.5 shrink-0">
                     <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-navy-500 to-navy-700 flex items-center justify-center">
                         <svg class="w-5 h-5 text-white" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -63,15 +64,11 @@
                     </div>
                     <span class="text-lg font-bold text-navy-700 tracking-tight">BD之家</span>
                 </a>
-
-                <!-- Desktop Links -->
                 <div class="hidden md:flex items-center gap-6 text-sm font-medium">
                     <a href="index.html" class="text-gray-500 hover:text-navy-700 transition-colors">首页</a>
                     <a href="news.html" class="text-gray-500 hover:text-navy-700 transition-colors">新闻</a>
                     <a href="xuetang.html" class="text-gray-500 hover:text-navy-700 transition-colors">学堂</a>
                     <a href="tools.html" class="text-navy-600 hover:text-navy-800 transition-colors">工具</a>
-
-                    <!-- 登录态显示区（默认隐藏） -->
                     <div id="userArea" class="hidden flex items-center gap-3 pl-2 border-l border-gray-200">
                         <span class="flex items-center gap-1.5 text-navy-700">
                             <svg class="w-4 h-4 text-navy-500" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -79,21 +76,15 @@
                         </span>
                         <button id="logoutBtn" class="text-gray-400 hover:text-navy-700 transition-colors">退出</button>
                     </div>
-
-                    <!-- 未登录显示区 -->
                     <button id="loginBtn" class="px-4 py-2 bg-navy-600 text-white rounded-lg hover:bg-navy-700 transition-all text-sm">登录</button>
                     <button id="registerBtn" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-all text-sm">注册</button>
                 </div>
-
-                <!-- Mobile Burger -->
                 <button id="menuBtn" class="md:hidden p-2 rounded-lg hover:bg-navy-50 transition-colors" aria-label="菜单">
                     <svg id="menuIcon" class="w-6 h-6 text-navy-700" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
                     </svg>
                 </button>
             </div>
-
-            <!-- Mobile Menu -->
             <div id="mobileMenu" class="md:hidden hidden pb-4 flex flex-col gap-2 text-sm font-medium">
                 <a href="index.html" class="block px-3 py-2 rounded-lg text-gray-600 hover:bg-navy-50 transition-colors mobile-link">首页</a>
                 <a href="news.html" class="block px-3 py-2 rounded-lg text-gray-600 hover:bg-navy-50 transition-colors mobile-link">新闻</a>
@@ -109,19 +100,172 @@
         </div>
     </nav>
 
-    <!-- ===== 工具 (占位) ===== -->
+    <!-- ===== TOOLS ===== -->
     <section class="pt-28 pb-16 sm:pt-32 sm:pb-20 bg-white scroll-mt-16">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center fade-up mb-10">
-                <span class="text-xs font-semibold text-navy-500 uppercase tracking-widest">Tools</span>
-                <h2 class="text-2xl sm:text-3xl font-bold text-navy-800 mt-2">工具</h2>
+            <div class="text-center fade-up mb-8">
+                <span class="text-xs font-semibold text-navy-500 uppercase tracking-widest">AI Tools</span>
+                <h2 class="text-2xl sm:text-3xl font-bold text-navy-800 mt-2">BD 智能工具</h2>
                 <div class="accent-line mx-auto mt-3"></div>
+                <p class="mt-4 text-sm text-gray-500 max-w-2xl mx-auto">基于站内 BD 交易数据库的智能检索与生成。靶点调研、Termsheet 撰写 / 审查、交易对比，纯本地运行、无需联网调接口。</p>
             </div>
-            <div class="fade-up empty-box rounded-2xl py-16 text-center bg-gray-50">
-                <svg class="w-12 h-12 text-gray-300 mx-auto mb-4" width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1 1v1a2 2 0 11-4 0v-1a1 1 0 00-1-1H7a1 1 0 01-1-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"/>
-                </svg>
-                <p class="text-gray-400 text-sm">内容筹备中，敬请期待</p>
+
+            <!-- Tab 切换 -->
+            <div class="flex flex-wrap justify-center gap-3 mb-8 fade-up" id="toolTabs">
+                <button data-tabbtn="target" class="tool-btn px-5 py-2.5 rounded-xl border border-gray-200 text-sm font-medium">靶点调研</button>
+                <button data-tabbtn="termsheet" class="tool-btn px-5 py-2.5 rounded-xl border border-gray-200 text-sm font-medium">Termsheet 撰写</button>
+                <button data-tabbtn="review" class="tool-btn px-5 py-2.5 rounded-xl border border-gray-200 text-sm font-medium">Termsheet 审查</button>
+                <button data-tabbtn="compare" class="tool-btn px-5 py-2.5 rounded-xl border border-gray-200 text-sm font-medium">交易对比</button>
+            </div>
+
+            <!-- ===== 靶点调研 ===== -->
+            <div data-panel="target" class="tool-panel fade-up">
+                <div class="grid lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-1">
+                        <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">靶点 / 产品关键词</label>
+                            <input id="targetInput" list="targetList" placeholder="如 EGFR / PD-1 / CLDN18.2"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm input-focus transition-all" autocomplete="off">
+                            <datalist id="targetList"></datalist>
+                            <button id="targetBtn" class="mt-3 w-full px-6 py-3 bg-navy-600 text-white font-semibold rounded-xl hover:bg-navy-700 transition-all active:scale-[0.98]">开始调研</button>
+                            <p class="mt-3 text-xs text-gray-400 leading-relaxed">在站内 <span id="targetTotal" class="font-semibold text-navy-500">—</span> 条 BD 交易数据库中，按靶点 / 产品模糊匹配相关交易，汇总交易趋势与参与方。</p>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-2" id="targetResult">
+                        <div class="rounded-2xl border border-dashed border-gray-200 py-16 text-center text-gray-400 text-sm">输入靶点关键词，查看相关交易调研</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== Termsheet 撰写 ===== -->
+            <div data-panel="termsheet" class="tool-panel fade-up hidden">
+                <div class="grid lg:grid-cols-2 gap-6">
+                    <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+                        <h3 class="text-sm font-bold text-navy-700 mb-4">交易要素</h3>
+                        <div class="space-y-3">
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs text-gray-500 mb-1">交易类型</label>
+                                    <select id="tsType" class="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm input-focus bg-white">
+                                        <option value="License-in（授权引进）">License-in（授权引进）</option>
+                                        <option value="License-out（授权出海）">License-out（授权出海）</option>
+                                        <option value="NewCo（合资新公司）">NewCo（合资新公司）</option>
+                                        <option value="并购（M&A）">并购（M&A）</option>
+                                        <option value="战略合作">战略合作</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-gray-500 mb-1">交易日期</label>
+                                    <input id="tsDate" type="text" placeholder="2026-08-01" class="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm input-focus">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs text-gray-500 mb-1">授权方（Licensor）</label>
+                                    <input id="tsLic" type="text" placeholder="如 恒瑞医药" class="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm input-focus">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-gray-500 mb-1">引进方（Licensee）</label>
+                                    <input id="tsLee" type="text" placeholder="如 辉瑞" class="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm input-focus">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs text-gray-500 mb-1">靶点 / 产品</label>
+                                    <input id="tsProduct" type="text" placeholder="如 EGFR" class="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm input-focus">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-gray-500 mb-1">产品类型</label>
+                                    <input id="tsPtype" type="text" placeholder="如 小分子 / 单抗" class="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm input-focus">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs text-gray-500 mb-1">适应症 / 疾病领域</label>
+                                    <input id="tsInd" type="text" placeholder="如 非小细胞肺癌" class="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm input-focus">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-gray-500 mb-1">项目阶段</label>
+                                    <input id="tsStage" type="text" placeholder="如 临床 II 期" class="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm input-focus">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs text-gray-500 mb-1">首付款</label>
+                                    <input id="tsUpfront" type="text" placeholder="如 5000万美元" class="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm input-focus">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-gray-500 mb-1">里程碑总额</label>
+                                    <input id="tsMile" type="text" placeholder="如 10亿美元" class="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm input-focus">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs text-gray-500 mb-1">销售提成率</label>
+                                    <input id="tsRoyalty" type="text" placeholder="如 高个位数 %" class="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm input-focus">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-gray-500 mb-1">交易地域</label>
+                                    <input id="tsRegion" type="text" placeholder="如 大中华区 / 全球" class="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm input-focus">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-500 mb-1">股权 / 其他对价（选填）</label>
+                                <input id="tsEquity" type="text" placeholder="如 投资方持股 30%" class="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm input-focus">
+                            </div>
+                        </div>
+                        <button id="tsGenBtn" class="mt-4 w-full px-6 py-3 bg-navy-600 text-white font-semibold rounded-xl hover:bg-navy-700 transition-all active:scale-[0.98]">生成 Termsheet</button>
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-sm font-bold text-navy-700">生成结果</h3>
+                            <div class="flex gap-2">
+                                <button id="tsCopy" class="px-3 py-1.5 text-xs font-medium text-navy-600 border border-navy-200 rounded-lg hover:bg-navy-50 transition-colors hidden">复制</button>
+                                <button id="tsDownload" class="px-3 py-1.5 text-xs font-medium text-navy-600 border border-navy-200 rounded-lg hover:bg-navy-50 transition-colors hidden">下载 .txt</button>
+                            </div>
+                        </div>
+                        <pre id="tsOutput" class="ts-box rounded-2xl p-5 text-xs leading-relaxed text-gray-700 whitespace-pre-wrap min-h-[420px] overflow-auto">填写左侧要素后点击「生成 Termsheet」。</pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== Termsheet 审查 ===== -->
+            <div data-panel="review" class="tool-panel fade-up hidden">
+                <div class="grid lg:grid-cols-2 gap-6">
+                    <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+                        <h3 class="text-sm font-bold text-navy-700 mb-4">粘贴 Termsheet / 交易公告文本</h3>
+                        <textarea id="reviewInput" rows="16" placeholder="将一份 Termsheet 或交易公告正文粘贴到这里……"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm input-focus transition-all resize-y font-mono"></textarea>
+                        <button id="reviewBtn" class="mt-3 w-full px-6 py-3 bg-navy-600 text-white font-semibold rounded-xl hover:bg-navy-700 transition-all active:scale-[0.98]">审查完整度</button>
+                        <p class="mt-3 text-xs text-gray-400 leading-relaxed">系统按 BD 交易关键条款清单逐条核验（交易主体、标的、财务条款、地域、交割、IP、保密、终止、争议解决等），并给出完整度评分与风险提示。</p>
+                    </div>
+                    <div>
+                        <div id="reviewScore" class="rounded-2xl border border-dashed border-gray-200 py-16 text-center text-gray-400 text-sm">审查结果将显示在这里</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== 交易对比 ===== -->
+            <div data-panel="compare" class="tool-panel fade-up hidden">
+                <div class="grid lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-1">
+                        <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">搜索交易</label>
+                            <input id="cmpSearch" placeholder="按靶点 / 公司搜索……" autocomplete="off"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm input-focus transition-all">
+                            <div id="cmpList" class="mt-3 space-y-2 max-h-[360px] overflow-auto"></div>
+                            <p class="mt-3 text-xs text-gray-400">勾选 2–4 条交易加入对比。</p>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-2">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="text-sm font-bold text-navy-700">对比篮子（<span id="cmpCount">0</span>）</h3>
+                            <button id="cmpRun" class="px-4 py-2 bg-navy-600 text-white text-sm font-semibold rounded-xl hover:bg-navy-700 transition-all disabled:opacity-40" disabled>生成对比</button>
+                        </div>
+                        <div id="cmpBasket" class="flex flex-wrap gap-2 mb-4"></div>
+                        <div id="cmpResult" class="rounded-2xl border border-dashed border-gray-200 py-16 text-center text-gray-400 text-sm">选择交易后点击「生成对比」</div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -150,57 +294,320 @@
                     <svg class="w-5 h-5" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
-
-            <!-- Tabs -->
             <div class="flex px-6 pt-4 gap-6 border-b border-gray-100">
                 <button data-tab="login" class="pb-3 text-sm font-semibold text-navy-700 border-b-2 border-navy-600 -mb-px transition-colors">登录</button>
                 <button data-tab="register" class="pb-3 text-sm font-medium text-gray-400 border-b-2 border-transparent transition-colors">注册</button>
             </div>
-
-            <!-- 登录 -->
             <form id="loginForm" class="p-6 space-y-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">邮箱</label>
-                    <input id="loginId" type="email" required
-                        class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm input-focus transition-all"
-                        placeholder="请输入注册邮箱">
+                    <input id="loginId" type="email" required class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm input-focus transition-all" placeholder="请输入注册邮箱">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">密码</label>
-                    <input id="loginPwd" type="password" required
-                        class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm input-focus transition-all"
-                        placeholder="请输入密码">
+                    <input id="loginPwd" type="password" required class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm input-focus transition-all" placeholder="请输入密码">
                 </div>
                 <button type="submit" class="w-full px-6 py-3 bg-navy-600 text-white font-semibold rounded-xl hover:bg-navy-700 transition-all active:scale-[0.98]">登录</button>
                 <p class="text-xs text-gray-400 text-center">注册即表示同意服务条款</p>
             </form>
-
-            <!-- 注册 -->
             <form id="registerForm" class="p-6 space-y-4 hidden">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">邮箱</label>
-                    <input id="regEmail" type="email" required
-                        class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm input-focus transition-all"
-                        placeholder="your@company.com">
+                    <input id="regEmail" type="email" required class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm input-focus transition-all" placeholder="your@company.com">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">密码</label>
-                    <input id="regPwd" type="password" required
-                        class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm input-focus transition-all"
-                        placeholder="至少 6 位">
+                    <input id="regPwd" type="password" required class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm input-focus transition-all" placeholder="至少 6 位">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">确认密码</label>
-                    <input id="regPwd2" type="password" required
-                        class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm input-focus transition-all"
-                        placeholder="再次输入密码">
+                    <input id="regPwd2" type="password" required class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm input-focus transition-all" placeholder="再次输入密码">
                 </div>
                 <button type="submit" class="w-full px-6 py-3 bg-emerald-600 text-white font-semibold rounded-xl hover:bg-emerald-700 transition-all active:scale-[0.98]">注册并登录</button>
             </form>
         </div>
     </div>
 
-    <!-- ===== SHARED SCRIPT ===== -->
+    <!-- ===== SCRIPTS ===== -->
+    <script src="news-data.js"></script>
     <script src="site.js"></script>
+    <script>
+    (function () {
+        var DATA = (window.BD && window.BD.news) ? window.BD.news() : (window.NEWS_DATA || []);
+        var esc = (window.BD && window.BD.escapeHtml) ? window.BD.escapeHtml : function (s) {
+            return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+            });
+        };
+
+        // ===== Tabs =====
+        var tabBtns = document.querySelectorAll('[data-tabbtn]');
+        var INACTIVE = 'tool-btn px-5 py-2.5 rounded-xl border border-gray-200 text-sm font-medium';
+        var ACTIVE = INACTIVE + ' active';
+        function activate(name) {
+            tabBtns.forEach(function (b) {
+                var on = b.getAttribute('data-tabbtn') === name;
+                b.className = on ? ACTIVE : INACTIVE;
+            });
+            document.querySelectorAll('.tool-panel').forEach(function (p) {
+                p.classList.toggle('hidden', p.getAttribute('data-panel') !== name);
+            });
+        }
+        tabBtns.forEach(function (b) {
+            b.addEventListener('click', function () { activate(b.getAttribute('data-tabbtn')); });
+        });
+
+        // ===== 靶点调研 =====
+        var totalEl = document.getElementById('targetTotal');
+        if (totalEl) totalEl.textContent = DATA.length;
+        // 填充 datalist（去重真实靶点）
+        var tl = document.getElementById('targetList');
+        if (tl) {
+            var seen = {}, opts = '';
+            DATA.forEach(function (d) {
+                var p = (d.product || '').trim();
+                if (p && p !== '未透露' && !seen[p]) { seen[p] = 1; opts += '<option value="' + esc(p) + '"></option>'; }
+            });
+            tl.innerHTML = opts;
+        }
+        function renderTarget(q) {
+            var res = document.getElementById('targetResult');
+            var deals = DATA.filter(function (d) {
+                return d.product && d.product.toLowerCase().indexOf(q.toLowerCase()) >= 0;
+            });
+            if (!deals.length) {
+                res.innerHTML = '<div class="rounded-2xl border border-dashed border-gray-200 py-16 text-center text-gray-400 text-sm">未找到与「' + esc(q) + '」相关的交易。</div>';
+                return;
+            }
+            // 统计
+            var lic = {}, lee = {}, ptype = {}, cat = {};
+            var minDate = '', maxDate = '';
+            deals.forEach(function (d) {
+                if (d.licenser) lic[d.licenser] = 1;
+                if (d.licensee) lee[d.licensee] = 1;
+                if (d.productType) ptype[d.productType] = 1;
+                if (d.category) cat[d.category] = 1;
+                if (d.date) {
+                    if (!minDate || d.date < minDate) minDate = d.date;
+                    if (!maxDate || d.date > maxDate) maxDate = d.date;
+                }
+            });
+            function tagObj(o) {
+                return Object.keys(o).map(function (k) {
+                    return '<span class="px-2 py-0.5 bg-navy-50 text-navy-600 rounded text-xs">' + esc(k) + '</span>';
+                }).join(' ');
+            }
+            var list = deals.map(function (d) {
+                var src = d.source ? '<a href="' + esc(d.source) + '" target="_blank" rel="noopener" class="text-xs text-navy-500 hover:underline">出处 ↗</a>' : '';
+                return '<div class="flex items-start justify-between gap-3 px-4 py-3 rounded-xl border border-gray-200 hover:border-navy-300 transition-colors">' +
+                    '<div><div class="text-sm text-navy-800 font-medium">' + esc(d.product || '未披露') + (d.productType ? ' <span class="text-xs text-gray-400 font-normal">· ' + esc(d.productType) + '</span>' : '') + '</div>' +
+                    '<div class="text-xs text-gray-500 mt-1">' + esc(d.date || '') + ' ｜ ' + esc(d.licenser || '—') + ' → ' + esc(d.licensee || '—') + '</div></div>' +
+                    '<div class="shrink-0">' + src + '</div></div>';
+            }).join('');
+            res.innerHTML =
+                '<div class="space-y-4">' +
+                '<div class="grid grid-cols-2 sm:grid-cols-4 gap-3">' +
+                statCard('相关交易', deals.length + ' 笔') +
+                statCard('时间跨度', (minDate && maxDate) ? (minDate + ' ~ ' + maxDate) : '—') +
+                statCard('授权方', Object.keys(lic).length + ' 家') +
+                statCard('引进方', Object.keys(lee).length + ' 家') +
+                '</div>' +
+                '<div class="bg-gray-50 rounded-2xl p-5 border border-gray-100">' +
+                '<div class="text-xs font-semibold text-gray-500 mb-2">参与公司</div><div class="flex flex-wrap gap-2">' + tagObj(lic) + ' ' + tagObj(lee) + '</div>' +
+                '<div class="text-xs font-semibold text-gray-500 mt-4 mb-2">产品类型 / 领域</div><div class="flex flex-wrap gap-2">' + tagObj(ptype) + ' ' + tagObj(cat) + '</div>' +
+                '</div>' +
+                '<div class="space-y-2">' + list + '</div>' +
+                '</div>';
+        }
+        function statCard(label, val) {
+            return '<div class="bg-navy-50 rounded-xl p-4"><div class="text-xs text-navy-500">' + label + '</div><div class="text-lg font-bold text-navy-800 mt-1">' + esc(val) + '</div></div>';
+        }
+        var tBtn = document.getElementById('targetBtn');
+        var tInput = document.getElementById('targetInput');
+        if (tBtn) tBtn.addEventListener('click', function () {
+            var q = tInput.value.trim();
+            if (q) renderTarget(q);
+        });
+        if (tInput) tInput.addEventListener('keydown', function (e) { if (e.key === 'Enter') { var q = tInput.value.trim(); if (q) renderTarget(q); } });
+
+        // ===== Termsheet 撰写 =====
+        function genTermsheet() {
+            var g = function (id) { return document.getElementById(id).value.trim(); };
+            var lic = g('tsLic'), lee = g('tsLee'), product = g('tsProduct');
+            if (!lic && !lee && !product) {
+                document.getElementById('tsOutput').textContent = '请至少填写授权方、引进方或靶点/产品之一。';
+                return;
+            }
+            var L = [
+                '— 保密 —',
+                '许可与合作交易条款摘要（TERM SHEET）',
+                '生成日期：' + (g('tsDate') || '未填写'),
+                '',
+                '一、交易概述',
+                '  交易类型：' + (g('tsType') || '未填写'),
+                '  授权方（Licensor）：' + (lic || '未填写'),
+                '  引进方（Licensee）：' + (lee || '未填写'),
+                '',
+                '二、标的资产',
+                '  靶点 / 产品：' + (product || '未填写'),
+                '  产品类型：' + (g('tsPtype') || '未填写'),
+                '  适应症 / 疾病领域：' + (g('tsInd') || '未填写'),
+                '  项目阶段：' + (g('tsStage') || '未填写'),
+                '',
+                '三、财务条款',
+                '  首付款（Upfront）：' + (g('tsUpfront') || '未填写'),
+                '  里程碑付款（Milestone）：' + (g('tsMile') || '未填写'),
+                '  销售提成（Royalty）：' + (g('tsRoyalty') || '未填写'),
+                '  股权 / 其他对价：' + (g('tsEquity') || '未填写'),
+                '',
+                '四、地域与排他',
+                '  交易地域：' + (g('tsRegion') || '未填写'),
+                '  排他性：建议约定排他期（如 90 天）及特定谈判范围，详见正文。',
+                '',
+                '五、交割先决条件',
+                '  建议包括：尽职调查完成、双方董事会/股东会批准、反垄断与监管审批（如适用）、无重大不利变化（MAC）等。',
+                '',
+                '六、其他通用条款',
+                '  知识产权：标的相关的专利权及 Know-how 归属与授权范围需明确。',
+                '  保密：双方对交易信息及尽调资料承担保密义务。',
+                '  终止：约定违约、未获审批及交割失败情形下的终止与费用分担。',
+                '  争议解决：建议约定仲裁（如 HKIAC / SIAC）及适用法律。',
+                '',
+                '— 本摘要由 BD之家 工具基于填写要素自动生成，仅供草拟参考，不构成法律意见 —'
+            ];
+            var out = L.join('\n');
+            document.getElementById('tsOutput').textContent = out;
+            document.getElementById('tsCopy').classList.remove('hidden');
+            document.getElementById('tsDownload').classList.remove('hidden');
+            window.__tsText = out;
+        }
+        var tsGen = document.getElementById('tsGenBtn');
+        if (tsGen) tsGen.addEventListener('click', genTermsheet);
+        var tsCopy = document.getElementById('tsCopy');
+        if (tsCopy) tsCopy.addEventListener('click', function () {
+            if (navigator.clipboard) navigator.clipboard.writeText(window.__tsText || '');
+            tsCopy.textContent = '已复制';
+            setTimeout(function () { tsCopy.textContent = '复制'; }, 1500);
+        });
+        var tsDown = document.getElementById('tsDownload');
+        if (tsDown) tsDown.addEventListener('click', function () {
+            var blob = new Blob([window.__tsText || ''], { type: 'text/plain;charset=utf-8' });
+            var a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'Termsheet_' + (document.getElementById('tsProduct').value.trim() || 'draft') + '.txt';
+            a.click();
+        });
+
+        // ===== Termsheet 审查 =====
+        var REVIEW_RULES = [
+            { name: '交易主体（授权方 / 引进方）', keys: ['授权方', '引进方', '许可方', '被许可方', 'licensor', 'licensee', '出让方', '受让方'] },
+            { name: '标的资产（靶点 / 产品 / 管线）', keys: ['靶点', '产品', '候选', '资产', '化合物', '管线', '分子'] },
+            { name: '适应症 / 疾病领域', keys: ['适应症', '疾病', '肿瘤', '自免', '代谢'] },
+            { name: '首付款 / Upfront', keys: ['首付款', 'upfront', '预付款'] },
+            { name: '里程碑付款 / Milestone', keys: ['里程碑', 'milestone'] },
+            { name: '销售提成 / Royalty', keys: ['提成', 'royalty', '销售分成'] },
+            { name: '交易地域', keys: ['地域', '中国', '全球', '欧美', '大中华', '区域'] },
+            { name: '交割先决条件', keys: ['交割', '先决条件', '成交条件', 'closing'] },
+            { name: '排他性 / Exclusivity', keys: ['排他', 'exclusive', '独家'] },
+            { name: '知识产权 / 专利', keys: ['知识产权', '专利', 'ip', '专利权'] },
+            { name: '保密条款', keys: ['保密', 'confidential'] },
+            { name: '终止条款', keys: ['终止', 'terminat'] },
+            { name: '争议解决', keys: ['争议', '仲裁', '诉讼', '法院', '管辖'] },
+            { name: '适用法律', keys: ['适用法律', '准据法', 'governing law'] }
+        ];
+        function reviewTermsheet() {
+            var text = (document.getElementById('reviewInput').value || '').toLowerCase();
+            var box = document.getElementById('reviewScore');
+            if (!text.trim()) { box.innerHTML = '<div class="text-gray-400 text-sm">请先粘贴待审查的文本。</div>'; return; }
+            var hit = 0, rows = '';
+            REVIEW_RULES.forEach(function (r) {
+                var ok = r.keys.some(function (k) { return text.indexOf(k.toLowerCase()) >= 0; });
+                if (ok) hit++;
+                rows += '<div class="flex items-center gap-2 py-1.5">' +
+                    (ok ? '<span class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs">✓</span>' : '<span class="w-5 h-5 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center text-xs">✗</span>') +
+                    '<span class="text-sm ' + (ok ? 'text-gray-700' : 'text-rose-500') + '">' + esc(r.name) + (ok ? '' : ' <span class="text-xs text-rose-400">（缺失 / 建议补充）</span>') + '</span></div>';
+            });
+            var score = Math.round(hit / REVIEW_RULES.length * 100);
+            var color = score >= 80 ? 'text-emerald-600' : (score >= 50 ? 'text-amber-500' : 'text-rose-500');
+            var tip = score >= 80 ? '条款较完整，建议补充缺失项后即可定稿。' : (score >= 50 ? '存在若干关键条款缺失，建议重点补充财务、地域与交割相关条款。' : '条款完整度偏低，存在较多缺失，存在交易风险，建议全面补正后再推进。');
+            box.innerHTML =
+                '<div class="space-y-4">' +
+                '<div class="flex items-center gap-4"><div class="text-4xl font-bold ' + color + '">' + score + '%</div><div class="text-sm text-gray-500">条款完整度评分<br>命中 ' + hit + ' / ' + REVIEW_RULES.length + ' 项</div></div>' +
+                '<div class="bg-gray-50 rounded-2xl p-5 border border-gray-100">' + rows + '</div>' +
+                '<p class="text-xs text-gray-500 leading-relaxed">风险提示：' + esc(tip) + '（本审查为关键词规则校验，不替代法律意见。）</p>' +
+                '</div>';
+        }
+        var rBtn = document.getElementById('reviewBtn');
+        if (rBtn) rBtn.addEventListener('click', reviewTermsheet);
+
+        // ===== 交易对比 =====
+        var basket = {};
+        function renderCmpList() {
+            var q = (document.getElementById('cmpSearch').value || '').toLowerCase();
+            var list = DATA.filter(function (d) {
+                if (!q) return true;
+                return [d.product, d.licenser, d.licensee, d.category].join(' ').toLowerCase().indexOf(q) >= 0;
+            }).slice(0, 40);
+            document.getElementById('cmpList').innerHTML = list.map(function (d) {
+                var on = basket[d.id] ? 'bg-navy-600 text-white border-navy-600' : 'bg-white text-gray-600 border-gray-200 hover:border-navy-300';
+                var label = (d.product || '未披露') + ' ｜ ' + (d.licenser || '—') + ' → ' + (d.licensee || '—');
+                return '<button data-id="' + esc(d.id) + '" class="cmp-add w-full text-left px-3 py-2 rounded-lg border text-xs ' + on + ' transition-colors truncate">' + esc(label) + '</button>';
+            }).join('');
+            document.querySelectorAll('.cmp-add').forEach(function (b) {
+                b.addEventListener('click', function () {
+                    var id = b.getAttribute('data-id');
+                    if (basket[id]) delete basket[id]; else basket[id] = 1;
+                    renderCmpList(); renderBasket();
+                });
+            });
+        }
+        function renderBasket() {
+            var ids = Object.keys(basket);
+            document.getElementById('cmpCount').textContent = ids.length;
+            document.getElementById('cmpBasket').innerHTML = ids.map(function (id) {
+                var d = DATA.filter(function (x) { return String(x.id) === String(id); })[0];
+                if (!d) return '';
+                return '<span class="inline-flex items-center gap-1 px-3 py-1 bg-navy-50 text-navy-700 rounded-full text-xs">' + esc((d.product || '未披露')) + ' <button data-rm="' + esc(id) + '" class="text-navy-400 hover:text-rose-500">×</button></span>';
+            }).join('');
+            document.querySelectorAll('[data-rm]').forEach(function (b) {
+                b.addEventListener('click', function () { delete basket[b.getAttribute('data-rm')]; renderCmpList(); renderBasket(); });
+            });
+            document.getElementById('cmpRun').disabled = ids.length < 2;
+        }
+        function renderCompare() {
+            var ids = Object.keys(basket);
+            if (ids.length < 2) return;
+            var deals = ids.map(function (id) { return DATA.filter(function (x) { return String(x.id) === String(id); })[0]; }).filter(Boolean);
+            function row(label, fn) {
+                return '<tr class="border-t border-gray-100"><td class="px-4 py-3 text-xs font-medium text-gray-500 align-top whitespace-nowrap bg-gray-50">' + label + '</td>' +
+                    deals.map(function (d) { return '<td class="px-4 py-3 text-sm text-gray-700 align-top">' + esc(fn(d) || '未披露') + '</td>'; }).join('') + '</tr>';
+            }
+            var head = '<tr><th class="px-4 py-3 text-xs font-semibold text-gray-400 text-left">指标</th>' + deals.map(function (d) {
+                return '<th class="px-4 py-3 text-sm font-bold text-navy-700 text-left">交易 ' + esc(String(d.id)) + '</th>';
+            }).join('') + '</tr>';
+            document.getElementById('cmpResult').innerHTML =
+                '<div class="overflow-auto rounded-2xl border border-gray-200">' +
+                '<table class="w-full border-collapse"><thead>' + head + '</thead><tbody>' +
+                row('日期', function (d) { return d.date; }) +
+                row('领域', function (d) { return d.category; }) +
+                row('靶点 / 产品', function (d) { return d.product + (d.productType ? '（' + d.productType + '）' : ''); }) +
+                row('授权方', function (d) { return d.licenser; }) +
+                row('引进方', function (d) { return d.licensee; }) +
+                row('交易类型', function (d) { return d.coop || '—'; }) +
+                row('地域', function (d) { return d.territory || '—'; }) +
+                row('原文出处', function (d) { return d.source ? '<a href="' + esc(d.source) + '" target="_blank" rel="noopener" class="text-navy-500 hover:underline">打开 ↗</a>' : '—'; }) +
+                '</tbody></table></div>';
+        }
+        var cs = document.getElementById('cmpSearch');
+        if (cs) cs.addEventListener('input', renderCmpList);
+        var cr = document.getElementById('cmpRun');
+        if (cr) cr.addEventListener('click', renderCompare);
+        renderCmpList(); renderBasket();
+
+        // ===== init from URL =====
+        var initTool = new URLSearchParams(location.search).get('tool');
+        activate(initTool && document.querySelector('[data-tabbtn="' + initTool + '"]') ? initTool : 'target');
+    })();
+    </script>
 </body>
 </html>
