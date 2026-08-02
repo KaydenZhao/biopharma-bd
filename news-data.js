@@ -2,6 +2,86 @@ window.NEWS_DATA = [
   {
     "id": 1,
     "category": "肿瘤",
+    "date": "2026年7月14日",
+    "month": "2026-07",
+    "product": "舒沃哲®（舒沃替尼）",
+    "productType": "小分子（EGFR TKI）",
+    "diseaseType": "肿瘤",
+    "indication": "EGFR 20号外显子插入突变（exon20ins）非小细胞肺癌（NSCLC）",
+    "stage": "已上市（中美获批）",
+    "licenser": "迪哲医药",
+    "licensee": "阿斯利康（AstraZeneca）",
+    "upfront": "6亿",
+    "upfrontType": "首付款（一次性、不可返还）",
+    "totalValue": "15",
+    "coop": "授权",
+    "territory": "全球",
+    "notes": "舒沃替尼为中美唯一获批口服EGFR exon20ins NSCLC靶向疗法；WU-KONG28 III期数据于2026 ASCO以LBA口头报告并发表于NEJM；一线适应症已递交中美上市申请",
+    "source": "https://stockmc.xueqiu.com/202607/688192_20260714_LOKU.pdf"
+  },
+  {
+    "id": 2,
+    "category": "肿瘤",
+    "date": "2026年7月2日",
+    "month": "2026-07",
+    "product": "AI药物发现合作（多靶点）",
+    "productType": "AI制药/小分子（靶点未披露）",
+    "diseaseType": "多个治疗领域（未披露）",
+    "indication": "多个高潜力靶点（未披露）",
+    "stage": "药物发现（临床前）",
+    "licenser": "英矽智能（Insilico Medicine）",
+    "licensee": "武田制药（Takeda）",
+    "upfront": "6000万",
+    "upfrontType": "项目启动费+近期里程碑付款",
+    "totalValue": "6",
+    "coop": "战略合作/授权",
+    "territory": "全球",
+    "notes": "英矽主导AI药物发现（Pharma.AI平台），武田负责全球开发与临床验证；继赛诺菲、默沙东后又一国际药企合作",
+    "source": "https://xueqiu.com/S/03696/397968666"
+  },
+  {
+    "id": 3,
+    "category": "肿瘤",
+    "date": "2026年6月30日",
+    "month": "2026-06",
+    "product": "MTS-128（三特异性TCE）",
+    "productType": "三特异性TCE（T细胞衔接器）",
+    "diseaseType": "未披露",
+    "indication": "未披露",
+    "stage": "临床前",
+    "licenser": "剂泰科技",
+    "licensee": "Boulevard Bio（Deerfield旗下）",
+    "upfront": "2000万",
+    "upfrontType": "首付款",
+    "totalValue": "16.2",
+    "coop": "授权",
+    "territory": "全球",
+    "notes": "创中国临床前TCE单笔海外授权金额纪录；基于自研AI纳米递送平台NanoForge开发",
+    "source": "https://www.metispharma.com/qyxw/276.html"
+  },
+  {
+    "id": 4,
+    "category": "肿瘤",
+    "date": "2026年5月29日",
+    "month": "2026-05",
+    "product": "12个肿瘤早期/源头创新项目（含ADC及多特异性抗体）",
+    "productType": "多项目组合（ADC/多特异性抗体等）",
+    "diseaseType": "肿瘤",
+    "indication": "肿瘤（未逐一披露）",
+    "stage": "早期/临床前（信达推进至I期）",
+    "licenser": "信达生物",
+    "licensee": "辉瑞（Pfizer）",
+    "upfront": "6.5亿",
+    "upfrontType": "首付款",
+    "totalValue": "105",
+    "coop": "全球战略许可及合作",
+    "territory": "全球",
+    "notes": "含信达8个早期管线及辉瑞提议的4个全新项目；信达负责推进至I期，辉瑞主导后续开发；双位数销售分成/利润共享",
+    "source": "https://www.stcn.com/article/detail/3935413.html"
+  },
+  {
+    "id": 5,
+    "category": "肿瘤",
     "date": "2025年8月1日",
     "month": "2025-08",
     "product": "CTM012（DLL3）和CTM013（WT1？）",
@@ -20,7 +100,7 @@ window.NEWS_DATA = [
     "source": "https://mp.weixin.qq.com/s?__biz=Mzg3OTc3NjczMw==&mid=2247510833&idx=1&sn=377c6913ee70874923eb6a063134812e&poc_token=HIZqjWijufkhfRE6SX3XBrwU-LOlkvzvb_b-R6QQ"
   },
   {
-    "id": 2,
+    "id": 6,
     "category": "肿瘤",
     "date": "2025年6月26日",
     "month": "2025-06",
@@ -40,7 +120,7 @@ window.NEWS_DATA = [
     "source": "https://stockmc.xueqiu.com/202506/688062_20250627_FLJL.pdf"
   },
   {
-    "id": 3,
+    "id": 7,
     "category": "肿瘤",
     "date": "2025年6月16日",
     "month": "2025-06",
@@ -60,7 +140,7 @@ window.NEWS_DATA = [
     "source": "https://mp.weixin.qq.com/s/yXggs3-bMJUIEo9KiK05Cw"
   },
   {
-    "id": 4,
+    "id": 8,
     "category": "肿瘤",
     "date": "2025年6月5日",
     "month": "2025-06",
@@ -80,7 +160,7 @@ window.NEWS_DATA = [
     "source": "https://mp.weixin.qq.com/s/6Q5c1ugE72Z85d8jUzSRQQ"
   },
   {
-    "id": 5,
+    "id": 9,
     "category": "肿瘤",
     "date": "2025年6月2日",
     "month": "2025-06",
@@ -100,7 +180,7 @@ window.NEWS_DATA = [
     "source": "https://mp.weixin.qq.com/s/peWaO6AbNss4jsgUIFeEmQ"
   },
   {
-    "id": 6,
+    "id": 10,
     "category": "肿瘤",
     "date": "2025年5月30日",
     "month": "2025-05",
@@ -120,7 +200,7 @@ window.NEWS_DATA = [
     "source": "https://mp.weixin.qq.com/s/ai1aG32GEmBA2Hj1_5Ol4g"
   },
   {
-    "id": 7,
+    "id": 11,
     "category": "肿瘤",
     "date": "2025年5月20日",
     "month": "2025-05",
@@ -140,7 +220,7 @@ window.NEWS_DATA = [
     "source": "https://www.3sbio.com/news/details.aspx?id=307"
   },
   {
-    "id": 8,
+    "id": 12,
     "category": "肿瘤",
     "date": "2025年2月19日",
     "month": "2025-02",
@@ -160,7 +240,7 @@ window.NEWS_DATA = [
     "source": "https://mp.weixin.qq.com/s/10DlZe9K5KExvweZARpFuw"
   },
   {
-    "id": 9,
+    "id": 13,
     "category": "肿瘤",
     "date": "2025年1月22日",
     "month": "2025-01",
@@ -180,7 +260,7 @@ window.NEWS_DATA = [
     "source": "https://www.lepubiopharma.com/new/216.html"
   },
   {
-    "id": 10,
+    "id": 14,
     "category": "肿瘤",
     "date": "2025年1月13日",
     "month": "2025-01",
@@ -200,7 +280,7 @@ window.NEWS_DATA = [
     "source": "https://www.simcere.com/news/detail.aspx?mtt=1485"
   },
   {
-    "id": 11,
+    "id": 15,
     "category": "肿瘤",
     "date": "2025年1月8日",
     "month": "2025-01",
@@ -220,7 +300,7 @@ window.NEWS_DATA = [
     "source": "https://mp.weixin.qq.com/s/dwruRrwz4bLVfF_lOli-Dg"
   },
   {
-    "id": 12,
+    "id": 16,
     "category": "肿瘤",
     "date": "2025年1月2日",
     "month": "2025-01",
@@ -240,7 +320,7 @@ window.NEWS_DATA = [
     "source": "https://mp.weixin.qq.com/s/jEdc_W_Pqkcl9erIdk-kFQ"
   },
   {
-    "id": 13,
+    "id": 17,
     "category": "肿瘤",
     "date": "2024年12月29日",
     "month": "2024-12",
@@ -260,7 +340,7 @@ window.NEWS_DATA = [
     "source": "https://mp.weixin.qq.com/s/KaqNt4gtAiYcA0LKl24_sw"
   },
   {
-    "id": 14,
+    "id": 18,
     "category": "肿瘤",
     "date": "2024年12月4日",
     "month": "2024-12",
@@ -280,7 +360,7 @@ window.NEWS_DATA = [
     "source": "https://mp.weixin.qq.com/s?src=11&timestamp=1733303268&ver=5668&signature=bHt7tKfzKB5kSTn3cy4Cnmmyzk1bv*6ew8Hcgu5E8jwbKnnUdqXp6urtvPwcXOpOIq-UCU0eBHbOBFPvI6*DRLV6-7ZlfGdA6HMoI4jmq3SHEorrXYQTcK2fPYCKWym5&new=1"
   },
   {
-    "id": 15,
+    "id": 19,
     "category": "肿瘤",
     "date": "2024年11月18日",
     "month": "2024-11",
@@ -300,7 +380,7 @@ window.NEWS_DATA = [
     "source": "https://mp.weixin.qq.com/s/XjkYoCEeG7k1r6pNerZMlw https://mp.weixin.qq.com/s/tP7di-D-VS_2NwatpbE4ww\nhttps://mp.weixin.qq.com/s?src=11&timestamp=1733492444&ver=5672&signature=26M3E7w6a8KE0wBWvsSoAXc1tHjwtg7MFJgh-buFxcco8CAS29622cZB8H5q*wNTV2q2Gxlyj7qL*ItfRDEmP9HPIW5XIQCp4ZteynYjhSv1eRcS8T8F3d7L*F2ITfM1&new=1"
   },
   {
-    "id": 16,
+    "id": 20,
     "category": "肿瘤",
     "date": "2024年11月17日",
     "month": "2024-11",
@@ -320,7 +400,7 @@ window.NEWS_DATA = [
     "source": "https://staticpacific.blob.core.windows.net/press-releases-attachments/3504798/HKEX-EPS_20241117_11442884_0.PDF"
   },
   {
-    "id": 17,
+    "id": 21,
     "category": "肿瘤",
     "date": "2024年11月14日",
     "month": "2024-11",
@@ -340,7 +420,7 @@ window.NEWS_DATA = [
     "source": "https://www.msdchina.com.cn/2024/11/14/company_news_2024-11-14/"
   },
   {
-    "id": 18,
+    "id": 22,
     "category": "肿瘤",
     "date": "2024年11月13日",
     "month": "2024-11",
@@ -360,7 +440,7 @@ window.NEWS_DATA = [
     "source": "https://www.sec.gov/Archives/edgar/data/1776985/000177698524000094/a99_1biontechtoacquirebiot.htmhttps://cn.biotheus.com/news/344.html"
   },
   {
-    "id": 19,
+    "id": 23,
     "category": "肿瘤",
     "date": "2024年9月4日",
     "month": "2024-09",
@@ -380,7 +460,7 @@ window.NEWS_DATA = [
     "source": "https://www.epimab.com/cn/news/41"
   },
   {
-    "id": 20,
+    "id": 24,
     "category": "肿瘤",
     "date": "2024年8月30日",
     "month": "2024-08",
@@ -400,7 +480,7 @@ window.NEWS_DATA = [
     "source": "https://www.allist.com.cn/newsd/101/2086.html"
   },
   {
-    "id": 21,
+    "id": 25,
     "category": "肿瘤",
     "date": "2024年8月19日",
     "month": "2024-08",
@@ -420,7 +500,7 @@ window.NEWS_DATA = [
     "source": ""
   },
   {
-    "id": 22,
+    "id": 26,
     "category": "肿瘤",
     "date": "2024年8月9日",
     "month": "2024-08",
@@ -440,7 +520,7 @@ window.NEWS_DATA = [
     "source": "https://www.msdchina.com.cn/2024/08/09/company_news/"
   },
   {
-    "id": 23,
+    "id": 27,
     "category": "肿瘤",
     "date": "2024年8月5日",
     "month": "2024-08",
@@ -460,7 +540,7 @@ window.NEWS_DATA = [
     "source": "https://www.genorbio.com/cn/media/corporate-news/20240805/"
   },
   {
-    "id": 24,
+    "id": 28,
     "category": "肿瘤",
     "date": "2024年8月1日",
     "month": "2024-08",
@@ -480,7 +560,7 @@ window.NEWS_DATA = [
     "source": "https://www.sec.gov/Archives/edgar/data/1789769/000178976924000077/til-20240801.htm  http://www.immuneonco.com/news/gsdynamics/583.html"
   },
   {
-    "id": 25,
+    "id": 29,
     "category": "肿瘤",
     "date": "2024年6月18日",
     "month": "2024-06",
@@ -500,7 +580,7 @@ window.NEWS_DATA = [
     "source": "https://news.qq.com/rain/a/20240619A06J5O00"
   },
   {
-    "id": 26,
+    "id": 30,
     "category": "肿瘤",
     "date": "2023年12月28日",
     "month": "2023-12",
@@ -520,7 +600,7 @@ window.NEWS_DATA = [
     "source": "https://www.astellas.com/en/news/28816"
   },
   {
-    "id": 27,
+    "id": 31,
     "category": "肿瘤",
     "date": "2023年12月12日",
     "month": "2023-12",
@@ -540,7 +620,7 @@ window.NEWS_DATA = [
     "source": "http://www.baili-pharm.com/upload/2023-12-12/128238727.pdf"
   },
   {
-    "id": 28,
+    "id": 32,
     "category": "肿瘤",
     "date": "2023年11月6日",
     "month": "2023-11",
@@ -560,7 +640,7 @@ window.NEWS_DATA = [
     "source": "https://cn.biotheus.com/news/333.html"
   },
   {
-    "id": 29,
+    "id": 33,
     "category": "肿瘤",
     "date": "2023年1月5日",
     "month": "2023-01",
@@ -580,7 +660,7 @@ window.NEWS_DATA = [
     "source": "https://www.wuxibiologics.com.cn/wuxi-biologics-and-gsk-enter-into-license-agreement-on-multiple-novel-bi-multi-specific-t-cell-engagers/"
   },
   {
-    "id": 30,
+    "id": 34,
     "category": "肿瘤",
     "date": "2022年12月6日",
     "month": "2022-12",
@@ -600,7 +680,7 @@ window.NEWS_DATA = [
     "source": "https://www.akesobio.com/cn/media/akeso-news/20221206/"
   },
   {
-    "id": 31,
+    "id": 35,
     "category": "肿瘤",
     "date": "2022年4月7日",
     "month": "2022-04",
@@ -620,7 +700,7 @@ window.NEWS_DATA = [
     "source": "https://www.harbourbiomed.cn/news/264.html"
   },
   {
-    "id": 32,
+    "id": 36,
     "category": "肿瘤",
     "date": "2021年7月1日",
     "month": "2021-07",
@@ -640,7 +720,7 @@ window.NEWS_DATA = [
     "source": ""
   },
   {
-    "id": 33,
+    "id": 37,
     "category": "自免",
     "date": "2025年6月26日",
     "month": "2025-06",
@@ -660,7 +740,7 @@ window.NEWS_DATA = [
     "source": "https://mp.weixin.qq.com/s/-jGzUpzIDu489ba1wuMQ6Q"
   },
   {
-    "id": 34,
+    "id": 38,
     "category": "自免",
     "date": "2025年6月23日",
     "month": "2025-06",
@@ -680,7 +760,7 @@ window.NEWS_DATA = [
     "source": "https://mp.weixin.qq.com/s/D56mwROLobkYa2ihY3Rr3g"
   },
   {
-    "id": 35,
+    "id": 39,
     "category": "自免",
     "date": "2024年11月18日",
     "month": "2024-11",
@@ -700,7 +780,7 @@ window.NEWS_DATA = [
     "source": "https://www.sec.gov/ix?doc=/Archives/edgar/data/1557746/000155837024015838/acrs-20241116x8k.htm  https://cn.biosion.com/news/datail/673b423b804acf5a200b92a8"
   },
   {
-    "id": 36,
+    "id": 40,
     "category": "自免",
     "date": "2024年11月7日",
     "month": "2024-11",
@@ -720,7 +800,7 @@ window.NEWS_DATA = [
     "source": "https://www.leadsbiolabs.com/id45497156.html"
   },
   {
-    "id": 37,
+    "id": 41,
     "category": "自免",
     "date": "2024年10月29日",
     "month": "2024-10",
@@ -740,7 +820,7 @@ window.NEWS_DATA = [
     "source": "https://news.bioon.com/article/f564850019c9.html"
   },
   {
-    "id": 38,
+    "id": 42,
     "category": "自免",
     "date": "2024年7月9日",
     "month": "2024-07",
@@ -760,7 +840,7 @@ window.NEWS_DATA = [
     "source": "https://staticpacific.blob.core.windows.net/press-releases-attachments/2903339/HKEX-EPS_20240709_11280365_0.PDF"
   },
   {
-    "id": 39,
+    "id": 43,
     "category": "自免",
     "date": "2024年1月9日",
     "month": "2024-01",
@@ -780,7 +860,7 @@ window.NEWS_DATA = [
     "source": "https://mp.weixin.qq.com/s?src=11&timestamp=1748878345&ver=6028&signature=GNSEYRREDK4ToIYhDX2oTmM7heQz6HQorz9HbMKp4A8*znj5alARrNdnSIHinnMbdq5QgsRpgA18-f7Mqb5Afp0Fkx6wa5SMl1FSclU6fZ6DJYd0WhMmLf4TNzAw-Iun&new=1"
   },
   {
-    "id": 40,
+    "id": 44,
     "category": "自免",
     "date": "2023年8月14日",
     "month": "2023-08",
@@ -800,7 +880,7 @@ window.NEWS_DATA = [
     "source": "https://mp.weixin.qq.com/s?src=11&timestamp=1748878236&ver=6028&signature=CIKsE1y98PV20svBZmapYRBV49Mo-bBOTpcu-yOFh-*WVapY5HKGjpTzmR9SR9PUpCzX*0I7G-lpkvcwhcmbgFxO9usGyzfzDabeQz*udoP-VCSIugV5OD6TB5zArXc5&new=1"
   },
   {
-    "id": 41,
+    "id": 45,
     "category": "自免",
     "date": "2021年3月1日",
     "month": "2021-03",
@@ -820,7 +900,7 @@ window.NEWS_DATA = [
     "source": "https://xueqiu.com/4797094524/293423712"
   },
   {
-    "id": 42,
+    "id": 46,
     "category": "代谢",
     "date": "2025年8月1日",
     "month": "2025-08",
@@ -840,7 +920,7 @@ window.NEWS_DATA = [
     "source": "https://mp.weixin.qq.com/s/IwTFUn6lOLhIBaZLupEXnA"
   },
   {
-    "id": 43,
+    "id": 47,
     "category": "代谢",
     "date": "2025年7月30日",
     "month": "2025-07",
@@ -860,7 +940,7 @@ window.NEWS_DATA = [
     "source": "https://mp.weixin.qq.com/s/0FiGEL7MI80r0v9eSM94HQ"
   },
   {
-    "id": 44,
+    "id": 48,
     "category": "代谢",
     "date": "2025年7月28日",
     "month": "2025-07",
@@ -880,7 +960,7 @@ window.NEWS_DATA = [
     "source": "https://static.sse.com.cn/disclosure/listedinfo/announcement/c/new/2025-07-28/600276_20250728_7GZX.pdf"
   },
   {
-    "id": 45,
+    "id": 49,
     "category": "代谢",
     "date": "2025年6月2日",
     "month": "2025-06",
@@ -900,7 +980,7 @@ window.NEWS_DATA = [
     "source": "https://mp.weixin.qq.com/s/rkaiYETNNE7XHS94837BpQ"
   },
   {
-    "id": 46,
+    "id": 50,
     "category": "代谢",
     "date": "2025年3月25日",
     "month": "2025-03",
@@ -920,7 +1000,7 @@ window.NEWS_DATA = [
     "source": "https://mp.weixin.qq.com/s/LPKi04Jk_7FnpckaTo8ZQA"
   },
   {
-    "id": 47,
+    "id": 51,
     "category": "代谢",
     "date": "2025年3月25日",
     "month": "2025-03",
@@ -940,7 +1020,7 @@ window.NEWS_DATA = [
     "source": "https://mp.weixin.qq.com/s?src=11&timestamp=1748881762&ver=6028&signature=3spJKOZBcsO3xB5dn5ySAd8HHtvXhpeIiMhw8VQ4XQC6sBdIBORj5Lh7fTNoFjXgn2269PhHADJvBAHFKU7LIFd2HbPFhESWp9yPfy*G4nAxw7*9Db6-3aOp-AHHlADh&new=1"
   },
   {
-    "id": 48,
+    "id": 52,
     "category": "代谢",
     "date": "2024年12月18日",
     "month": "2024-12",
@@ -960,7 +1040,7 @@ window.NEWS_DATA = [
     "source": "https://www.merck.com/news/merck-enters-into-exclusive-global-license-agreement-with-hansoh-pharma-for-investigational-oral-glp-1-receptor-agonist/"
   },
   {
-    "id": 49,
+    "id": 53,
     "category": "代谢",
     "date": "2024年10月8日",
     "month": "2024-10",
@@ -978,5 +1058,185 @@ window.NEWS_DATA = [
     "territory": "全球权益",
     "notes": "",
     "source": "https://mp.weixin.qq.com/s?src=11&timestamp=1748881171&ver=6028&signature=ktmXthAkzOm8nj3lrGbeY4-gKDUjW8*Nd5ykHRxaqyamuwvTu9hJF8GQYo-fht6y*Bf7qVMW0SpO10BnGfXn0NYhXPxn*uYf9o70HwydUR9m0YBcAMY1UTbUCQECkTG*&new=1"
+  },
+  {
+    "id": 54,
+    "category": "BCG项目",
+    "date": "2024年12月3日",
+    "month": "2024-12",
+    "product": "OSMR",
+    "productType": "单抗",
+    "diseaseType": "自免",
+    "indication": "",
+    "stage": "TOP6",
+    "licenser": "",
+    "licensee": "Prism Medicines",
+    "upfront": "排他费：10+10\noption：100",
+    "upfrontType": "",
+    "totalValue": "",
+    "coop": "",
+    "territory": "",
+    "notes": "",
+    "source": ""
+  },
+  {
+    "id": 55,
+    "category": "BCG项目",
+    "date": "2024年11月13日",
+    "month": "2024-11",
+    "product": "GUCY2C",
+    "productType": "ADC",
+    "diseaseType": "肿瘤",
+    "indication": "",
+    "stage": "binder",
+    "licenser": "百奥赛图",
+    "licensee": "",
+    "upfront": "first option:1.5万\nsecond option：8.5万\nopition：30万",
+    "upfrontType": "",
+    "totalValue": "",
+    "coop": "",
+    "territory": "",
+    "notes": "",
+    "source": ""
+  },
+  {
+    "id": 56,
+    "category": "BCG项目",
+    "date": "2024年6月30日",
+    "month": "2024-06",
+    "product": "BCG034（B7H3/PTK7）",
+    "productType": "双抗ADC",
+    "diseaseType": "肿瘤",
+    "indication": "",
+    "stage": "PCC",
+    "licenser": "百奥赛图",
+    "licensee": "IDEAYA",
+    "upfront": "50\nOption Exercise Fee：600",
+    "upfrontType": "",
+    "totalValue": "",
+    "coop": "授权",
+    "territory": "全球",
+    "notes": "保留TPD",
+    "source": ""
+  },
+  {
+    "id": 57,
+    "category": "BCG项目",
+    "date": "2023年12月21日",
+    "month": "2023-12",
+    "product": "YH012 (HER2/TROP2)",
+    "productType": "双抗ADC",
+    "diseaseType": "肿瘤",
+    "indication": "",
+    "stage": "PCC",
+    "licenser": "百奥赛图",
+    "licensee": "Radiance",
+    "upfront": "50（25+25）\noption：500万（250+250）",
+    "upfrontType": "",
+    "totalValue": "",
+    "coop": "",
+    "territory": "",
+    "notes": "",
+    "source": ""
+  },
+  {
+    "id": 58,
+    "category": "BCG项目",
+    "date": "2024年3月14日",
+    "month": "2024-03",
+    "product": "BSA01（EGFR/MUC1）",
+    "productType": "双抗ADC",
+    "diseaseType": "肿瘤",
+    "indication": "肿瘤",
+    "stage": "",
+    "licenser": "百奥赛图",
+    "licensee": "ABL",
+    "upfront": "100",
+    "upfrontType": "",
+    "totalValue": "",
+    "coop": "授权",
+    "territory": "全球",
+    "notes": "EGFR/MUC1 target pair for any ADC, excluding nucleic acid or TPD.",
+    "source": ""
+  },
+  {
+    "id": 59,
+    "category": "BCG项目",
+    "date": "2023年2月17日",
+    "month": "2023-02",
+    "product": "YH008（PD-1/CD40）",
+    "productType": "双抗",
+    "diseaseType": "肿瘤",
+    "indication": "",
+    "stage": "pre-IND",
+    "licenser": "百奥赛图",
+    "licensee": "微芯生物",
+    "upfront": "4000RMB",
+    "upfrontType": "",
+    "totalValue": "",
+    "coop": "授权",
+    "territory": "大中华区（包括港澳台）",
+    "notes": "",
+    "source": ""
+  },
+  {
+    "id": 60,
+    "category": "BCG项目",
+    "date": "2022年6月24日",
+    "month": "2022-06",
+    "product": "DM001（EGFR/TROP2）",
+    "productType": "双抗ADC",
+    "diseaseType": "肿瘤",
+    "indication": "肿瘤",
+    "stage": "PCC",
+    "licenser": "百奥赛图",
+    "licensee": "多玛",
+    "upfront": "2000RMB",
+    "upfrontType": "",
+    "totalValue": "",
+    "coop": "转让",
+    "territory": "全球",
+    "notes": "",
+    "source": ""
+  },
+  {
+    "id": 61,
+    "category": "BCG项目",
+    "date": "2023年6月28日",
+    "month": "2023-06",
+    "product": "DM005（EGFR/MET）",
+    "productType": "双抗ADC",
+    "diseaseType": "肿瘤",
+    "indication": "肿瘤",
+    "stage": "PCC",
+    "licenser": "百奥赛图",
+    "licensee": "多玛",
+    "upfront": "2000RMB",
+    "upfrontType": "",
+    "totalValue": "",
+    "coop": "转让",
+    "territory": "全球",
+    "notes": "",
+    "source": ""
+  },
+  {
+    "id": 62,
+    "category": "BCG项目",
+    "date": "2024年6月14日",
+    "month": "2024-06",
+    "product": "BCG019(EGFR/HER3)",
+    "productType": "双抗ADC",
+    "diseaseType": "肿瘤",
+    "indication": "",
+    "stage": "PCC",
+    "licenser": "百奥赛图",
+    "licensee": "Astellas",
+    "upfront": "120万，排他MTA",
+    "upfrontType": "",
+    "totalValue": "",
+    "coop": "",
+    "territory": "",
+    "notes": "",
+    "source": ""
   }
 ];
