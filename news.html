@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>交易动态 — BD之家</title>
-    <meta name="description" content="BD之家 · 生物医药 BD 交易动态，支持按适应症、日期、靶点、项目阶段筛选">
+    <meta name="description" content="BD之家 · 生物医药 BD 交易动态，支持按适应症、日期、靶点、关键词筛选">
     <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -123,7 +123,7 @@
 
             <!-- 筛选器 -->
             <div class="fade-up bg-white border border-gray-200 rounded-2xl p-4 sm:p-5 mb-8 shadow-sm">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                     <div>
                         <label class="block text-xs font-medium text-gray-500 mb-1">适应症</label>
                         <select id="fCategory" class="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm input-focus bg-white">
@@ -142,12 +142,6 @@
                     <div>
                         <label class="block text-xs font-medium text-gray-500 mb-1">靶点 / 产品</label>
                         <select id="fTarget" class="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm input-focus bg-white">
-                            <option value="">全部</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-500 mb-1">项目阶段</label>
-                        <select id="fStage" class="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm input-focus bg-white">
                             <option value="">全部</option>
                         </select>
                     </div>
@@ -254,20 +248,17 @@
 
             BD.fillSelect('fMonth', BD.uniq(NEWS.map(function (d) { return d.month; })).sort().reverse());
             BD.fillSelect('fTarget', BD.uniq(NEWS.map(function (d) { return d.product; })).sort());
-            BD.fillSelect('fStage', BD.uniq(NEWS.map(function (d) { return d.stage; })).sort());
 
             function applyFilters() {
                 var c = document.getElementById('fCategory').value;
                 var m = document.getElementById('fMonth').value;
                 var t = document.getElementById('fTarget').value;
-                var s = document.getElementById('fStage').value;
                 var q = document.getElementById('fSearch').value.trim().toLowerCase();
                 var grid = document.getElementById('newsGrid');
                 var filtered = NEWS.filter(function (n) {
                     if (c && n.category !== c) return false;
                     if (m && n.month !== m) return false;
                     if (t && n.product !== t) return false;
-                    if (s && n.stage !== s) return false;
                     if (q) {
                         var hay = [n.product, n.indication, n.notes, n.licenser, n.licensee, n.productType].join(' ').toLowerCase();
                         if (hay.indexOf(q) === -1) return false;
@@ -283,7 +274,7 @@
                 BD.observeFade(grid);
             }
 
-            ['fCategory', 'fMonth', 'fTarget', 'fStage'].forEach(function (id) {
+            ['fCategory', 'fMonth', 'fTarget'].forEach(function (id) {
                 document.getElementById(id).addEventListener('change', applyFilters);
             });
             document.getElementById('fSearch').addEventListener('input', applyFilters);
@@ -291,7 +282,6 @@
                 document.getElementById('fCategory').value = '';
                 document.getElementById('fMonth').value = '';
                 document.getElementById('fTarget').value = '';
-                document.getElementById('fStage').value = '';
                 document.getElementById('fSearch').value = '';
                 applyFilters();
             });
