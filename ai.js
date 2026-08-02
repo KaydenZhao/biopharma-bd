@@ -145,6 +145,61 @@
 
   function ensureConfig(cb){ if(configured()){ cb(); } else { openConfig(); } }
 
+  // ===== 胖猫知识库检索（RAG，静态 kb-pangmao.js）=====
+  // 来源：IMA 知识库「胖猫」（公开内容：胖猫的生命科学札记）。纯前端关键词检索，无 embedding 依赖。
+  var kbLoaded = null;
+  function loadKB(){
+    if(kbLoaded) return kbLoaded;
+    kbLoaded = new Promise(function(resolve){
+      if(window.PANGMAO_KB){ resolve(true); return; }
+      var sc = document.createElement('script');
+      sc.src = 'kb-pangmao.js';
+      sc.onload = function(){ resolve(true); };
+      sc.onerror = function(){ resolve(false); };
+      document.head.appendChild(sc);
+    });
+    return kbLoaded;
+  }
+  function tokenize(q){
+    var terms = [];
+    var clean = (q || '').replace(/[\s，。、；：！？“”‘’（）《》【】—…·,.!?;:()\[\]"'`~@#$%^&*+=|\\/<>{}]/g, ' ');
+    var lw = clean.match(/[A-Za-z][A-Za-z0-9\-]{1,}/g) || [];
+    for(var i=0;i<lw.length;i++){ var w = lw[i].toLowerCase(); if(w.length>=2) terms.push(w); }
+    var cn = clean.match(/[一-龥]+/g) || [];
+    for(var j=0;j<cn.length;j++){
+      var str = cn[j];
+      if(str.length === 1){ terms.push(str); }
+      else { for(var k=0;k<str.length-1;k++){ terms.push(str.substr(k,2)); } }
+    }
+    return terms;
+  }
+  function scoreChunk(chunk, terms){
+    var text = chunk.text, low = text.toLowerCase(), title = (chunk.doc || '').toLowerCase();
+    var score = 0;
+    for(var i=0;i<terms.length;i++){
+      var t = terms[i], idx = 0, c = 0;
+      while((idx = low.indexOf(t, idx)) !== -1){ c++; idx += t.length; }
+      if(c > 0){ score += c; if(title.indexOf(t) !== -1) score += c * 4; }
+    }
+    return score;
+  }
+  function retrieve(query, k){
+    k = k || 6;
+    var kb = window.PANGMAO_KB;
+    if(!kb || !kb.length) return [];
+    var terms = tokenize(query);
+    if(!terms.length) return [];
+    var scored = [];
+    for(var i=0;i<kb.length;i++){
+      var sc = scoreChunk(kb[i], terms);
+      if(sc > 0) scored.push({ sc: sc, item: kb[i] });
+    }
+    scored.sort(function(a,b){ return b.sc - a.sc; });
+    return scored.slice(0, k).map(function(x){
+      return '【来源：' + x.item.doc + '（' + x.item.cat + '）】\n' + x.item.text;
+    });
+  }
+
   window.BD_AI = {
     configured: configured,
     callDeepSeek: callDeepSeek,
@@ -152,7 +207,9 @@
     mdToHtml: mdToHtml,
     openConfig: openConfig,
     ensureConfig: ensureConfig,
-    g: g
+    g: g,
+    loadKB: loadKB,
+    retrieve: retrieve
   };
 
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', injectUI);

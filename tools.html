@@ -601,12 +601,23 @@
                 });
             });
         }
+        async function kbContext(query, k){
+            try {
+                var ok = await BD_AI.loadKB();
+                if(!ok) return '';
+                var hits = BD_AI.retrieve(query, k || 6);
+                if(!hits.length) return '';
+                return '\n\n【补充参考资料 · 胖猫 BD 知识库（来源 IMA「胖猫」公开内容，仅供参考）】\n' + hits.join('\n\n---\n\n');
+            } catch(e){ return ''; }
+        }
+
         function targetAi() {
             var q = tInput.value.trim();
             if (!q) { alert('请输入靶点 / 产品关键词'); return; }
             var res = document.getElementById('targetResult');
             res.innerHTML = '<div class="rounded-2xl border border-dashed border-gray-200 py-16 text-center text-gray-400 text-sm">正在联网搜索并调用 DeepSeek 生成分析报告…</div>';
             var deals = DATA.filter(function (d) { return d.product && d.product.toLowerCase().indexOf(q.toLowerCase()) >= 0; });
+            return Promise.resolve().then(function () { return kbContext(q + ' 靶点 BD 交易 授权 临床 趋势', 8); }).then(function (kb) {
             return BD_AI.webSearch(q + ' 靶点 药物 BD 交易 临床 进展', 6).then(function (sr) {
                 var localBrief = deals.map(function (d) {
                     return '- ' + [d.date, d.licenser, '→', d.licensee, d.product, d.coop].filter(Boolean).join(' ');
@@ -614,24 +625,27 @@
                 var searchBrief = sr.raw ? sr.raw.slice(0, 3500) : '(无搜索结果)';
                 var messages = [
                     { role: 'system', content: '你是资深医药 / 生物科技 BD 分析师，擅长靶点调研与交易趋势分析。用中文，结构化、专业、客观，不编造数据，不确定处标注「需进一步核实」。' },
-                    { role: 'user', content: '请对靶点 / 产品「' + q + '」撰写一份 BD 调研简报。\n\n【站内 BD 交易库匹配到的相关交易】\n' + (localBrief || '(无)') + '\n\n【联网搜索到的公开资料（来自 DuckDuckGo，含噪音请甄别）】\n' + searchBrief + '\n\n要求：1) 靶点 / 产品概述 2) 相关 BD 交易趋势与特征 3) 主要参与方 4) 最新公开动态（基于联网资料）5) 对 BD 人员的启示与风险提示。' }
+                    { role: 'user', content: '请对靶点 / 产品「' + q + '」撰写一份 BD 调研简报。\n\n【站内 BD 交易库匹配到的相关交易】\n' + (localBrief || '(无)') + '\n\n【联网搜索到的公开资料（来自 DuckDuckGo，含噪音请甄别）】\n' + searchBrief + (kb ? ('\n\n' + kb) : '') + '\n\n要求：1) 靶点 / 产品概述 2) 相关 BD 交易趋势与特征 3) 主要参与方 4) 最新公开动态（基于联网资料）5) 对 BD 人员的启示与风险提示。' }
                 ];
                 return BD_AI.callDeepSeek(messages).then(function (report) {
                     var src = sr.results.length ? '<div class="mt-4 bg-gray-50 rounded-2xl p-4 border border-gray-100"><div class="text-xs font-semibold text-gray-500 mb-2">参考来源（联网搜索）</div><div class="space-y-1">' + sr.results.map(function (r) { return '<a href="' + esc(r.href) + '" target="_blank" rel="noopener" class="block text-xs text-navy-500 hover:underline truncate">' + esc(r.title) + '</a>'; }).join('') + '</div></div>' : '';
                     res.innerHTML = '<div class="space-y-4"><div class="bg-white rounded-2xl p-6 border border-navy-200">' + BD_AI.mdToHtml(report) + '</div>' + src + '</div>';
                 });
             });
+            });
         }
         function tsAi() {
             var draft = window.__tsText || document.getElementById('tsOutput').textContent;
             if (!draft || draft.indexOf('请至少填写') >= 0) { alert('请先生成 Termsheet 草稿'); return; }
+            return Promise.resolve().then(function () { return kbContext(draft + ' Term Sheet 条款 首付款 里程碑 royalty 知识产权 保密 终止 定义', 6); }).then(function (kb) {
             var messages = [
                 { role: 'system', content: '你是资深医药 BD 商务 / 法务专家。用户已填好一份 Termsheet 草稿要素，请在不改变任何数字与事实的前提下，将其润色、补全为专业、严谨、可直接使用的术语清单（Term Sheet）文本，使用规范条款表述，保持中文。' },
-                { role: 'user', content: '以下是草稿：\n' + draft + '\n\n请润色为正式 Term Sheet。' }
+                { role: 'user', content: '以下是草稿：\n' + draft + (kb ? ('\n\n' + kb) : '') + '\n\n请润色为正式 Term Sheet。' }
             ];
             return BD_AI.callDeepSeek(messages).then(function (out) {
                 document.getElementById('tsOutput').textContent = out;
                 window.__tsText = out;
+            });
             });
         }
         function reviewAi() {
@@ -639,12 +653,14 @@
             if (!text.trim()) { alert('请先粘贴待审查文本'); return; }
             var box = document.getElementById('reviewScore');
             box.innerHTML = '<div class="text-gray-400 text-sm py-16 text-center">DeepSeek 深度审查中…</div>';
+            return Promise.resolve().then(function () { return kbContext(text + ' 审查 条款 完整度 风险 IP 知识产权 保密 终止 付款 地域 交割 排他 争议解决', 6); }).then(function (kb) {
             var messages = [
                 { role: 'system', content: '你是资深医药 BD 交易律师。请审查用户提供的 Termsheet / 交易公告，按 BD 交易关键条款清单（交易主体、标的、财务条款、地域、交割先决、排他、IP、保密、终止、争议解决、适用法律等）逐项评估完整度，指出缺失与风险，并给出改进建议。中文，结构化。' },
-                { role: 'user', content: '待审查文本：\n' + text + '\n\n请输出结构化审查意见。' }
+                { role: 'user', content: '待审查文本：\n' + text + (kb ? ('\n\n' + kb) : '') + '\n\n请输出结构化审查意见。' }
             ];
             return BD_AI.callDeepSeek(messages).then(function (out) {
                 box.innerHTML = '<div class="space-y-4"><h3 class="text-sm font-bold text-navy-700">AI 深度审查意见</h3><div class="bg-white rounded-2xl p-6 border border-navy-200">' + BD_AI.mdToHtml(out) + '</div></div>';
+            });
             });
         }
         function cmpAi() {
@@ -654,12 +670,14 @@
             var info = deals.map(function (d) { return '- ' + (d.product || '未披露') + ' | ' + (d.licenser || '?') + ' → ' + (d.licensee || '?') + ' | ' + (d.category || '') + ' | ' + (d.coop || '') + ' | ' + (d.upfront || '') + ' | ' + (d.territory || ''); }).join('\n');
             var res = document.getElementById('cmpResult');
             res.innerHTML = '<div class="rounded-2xl border border-dashed border-gray-200 py-16 text-center text-gray-400 text-sm">DeepSeek 正在生成对比洞察…</div>';
+            return Promise.resolve().then(function () { return kbContext(info + ' 交易对比 结构 金额 首付款 里程碑 地域 策略 估值 出海 授权', 6); }).then(function (kb) {
             var messages = [
                 { role: 'system', content: '你是资深医药 BD 分析师。请对比以下 BD 交易，从交易结构、金额特征、参与方策略、地域布局等角度给出洞察。中文，结构化。' },
-                { role: 'user', content: '交易列表：\n' + info + '\n\n请给出对比洞察。' }
+                { role: 'user', content: '交易列表：\n' + info + (kb ? ('\n\n' + kb) : '') + '\n\n请给出对比洞察。' }
             ];
             return BD_AI.callDeepSeek(messages).then(function (out) {
                 res.innerHTML = '<div class="space-y-4"><h3 class="text-sm font-bold text-navy-700">AI 对比洞察</h3><div class="bg-white rounded-2xl p-6 border border-navy-200">' + BD_AI.mdToHtml(out) + '</div></div>';
+            });
             });
         }
         var tAiBtn = document.getElementById('targetAiBtn');
