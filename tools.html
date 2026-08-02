@@ -107,7 +107,7 @@
                 <span class="text-xs font-semibold text-navy-500 uppercase tracking-widest">AI Tools</span>
                 <h2 class="text-2xl sm:text-3xl font-bold text-navy-800 mt-2">BD 智能工具</h2>
                 <div class="accent-line mx-auto mt-3"></div>
-                <p class="mt-4 text-sm text-gray-500 max-w-2xl mx-auto">基于站内 BD 交易数据库的智能检索与生成。靶点调研、Termsheet 撰写 / 审查、交易对比，纯本地运行、无需联网调接口。</p>
+                <p class="mt-4 text-sm text-gray-500 max-w-2xl mx-auto">基于站内 BD 交易数据库的智能检索与生成。配置 DeepSeek Key 后，靶点调研、Termsheet 撰写 / 审查、交易对比均可升级为 AI 联网增强模式（右下角「AI 配置」）。</p>
             </div>
 
             <!-- Tab 切换 -->
@@ -127,8 +127,11 @@
                             <input id="targetInput" list="targetList" placeholder="如 EGFR / PD-1 / CLDN18.2"
                                 class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm input-focus transition-all" autocomplete="off">
                             <datalist id="targetList"></datalist>
-                            <button id="targetBtn" class="mt-3 w-full px-6 py-3 bg-navy-600 text-white font-semibold rounded-xl hover:bg-navy-700 transition-all active:scale-[0.98]">开始调研</button>
-                            <p class="mt-3 text-xs text-gray-400 leading-relaxed">在站内 <span id="targetTotal" class="font-semibold text-navy-500">—</span> 条 BD 交易数据库中，按靶点 / 产品模糊匹配相关交易，汇总交易趋势与参与方。</p>
+                            <div class="mt-3 grid grid-cols-2 gap-3">
+                                <button id="targetBtn" class="px-3 py-3 bg-navy-600 text-white font-semibold rounded-xl hover:bg-navy-700 transition-all active:scale-[0.98] text-sm">本地统计</button>
+                                <button id="targetAiBtn" class="px-3 py-3 bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-semibold rounded-xl hover:opacity-90 transition-all active:scale-[0.98] text-sm">🤖 AI 联网调研</button>
+                            </div>
+                            <p class="mt-3 text-xs text-gray-400 leading-relaxed">在站内 <span id="targetTotal" class="font-semibold text-navy-500">—</span> 条 BD 交易数据库中，按靶点 / 产品模糊匹配相关交易，汇总交易趋势与参与方。「AI 联网调研」会调用 DeepSeek 并结合公开搜索生成简报。</p>
                         </div>
                     </div>
                     <div class="lg:col-span-2" id="targetResult">
@@ -222,6 +225,7 @@
                             <div class="flex gap-2">
                                 <button id="tsCopy" class="px-3 py-1.5 text-xs font-medium text-navy-600 border border-navy-200 rounded-lg hover:bg-navy-50 transition-colors hidden">复制</button>
                                 <button id="tsDownload" class="px-3 py-1.5 text-xs font-medium text-navy-600 border border-navy-200 rounded-lg hover:bg-navy-50 transition-colors hidden">下载 .txt</button>
+                                <button id="tsAi" class="px-3 py-1.5 text-xs font-medium text-white bg-gradient-to-r from-violet-600 to-indigo-600 rounded-lg hover:opacity-90 transition-colors hidden">🤖 AI 润色</button>
                             </div>
                         </div>
                         <pre id="tsOutput" class="ts-box rounded-2xl p-5 text-xs leading-relaxed text-gray-700 whitespace-pre-wrap min-h-[420px] overflow-auto">填写左侧要素后点击「生成 Termsheet」。</pre>
@@ -236,7 +240,10 @@
                         <h3 class="text-sm font-bold text-navy-700 mb-4">粘贴 Termsheet / 交易公告文本</h3>
                         <textarea id="reviewInput" rows="16" placeholder="将一份 Termsheet 或交易公告正文粘贴到这里……"
                             class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm input-focus transition-all resize-y font-mono"></textarea>
-                        <button id="reviewBtn" class="mt-3 w-full px-6 py-3 bg-navy-600 text-white font-semibold rounded-xl hover:bg-navy-700 transition-all active:scale-[0.98]">审查完整度</button>
+                        <div class="mt-3 grid grid-cols-2 gap-3">
+                            <button id="reviewBtn" class="px-3 py-3 bg-navy-600 text-white font-semibold rounded-xl hover:bg-navy-700 transition-all active:scale-[0.98] text-sm">规则审查</button>
+                            <button id="reviewAi" class="px-3 py-3 bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-semibold rounded-xl hover:opacity-90 transition-all active:scale-[0.98] text-sm">🤖 AI 深度审查</button>
+                        </div>
                         <p class="mt-3 text-xs text-gray-400 leading-relaxed">系统按 BD 交易关键条款清单逐条核验（交易主体、标的、财务条款、地域、交割、IP、保密、终止、争议解决等），并给出完整度评分与风险提示。</p>
                     </div>
                     <div>
@@ -261,6 +268,7 @@
                         <div class="flex items-center justify-between mb-3">
                             <h3 class="text-sm font-bold text-navy-700">对比篮子（<span id="cmpCount">0</span>）</h3>
                             <button id="cmpRun" class="px-4 py-2 bg-navy-600 text-white text-sm font-semibold rounded-xl hover:bg-navy-700 transition-all disabled:opacity-40" disabled>生成对比</button>
+                            <button id="cmpAi" class="px-4 py-2 bg-gradient-to-r from-violet-600 to-indigo-600 text-white text-sm font-semibold rounded-xl hover:opacity-90 transition-all disabled:opacity-40" disabled>🤖 AI 洞察</button>
                         </div>
                         <div id="cmpBasket" class="flex flex-wrap gap-2 mb-4"></div>
                         <div id="cmpResult" class="rounded-2xl border border-dashed border-gray-200 py-16 text-center text-gray-400 text-sm">选择交易后点击「生成对比」</div>
@@ -331,6 +339,7 @@
     <!-- ===== SCRIPTS ===== -->
     <script src="news-data.js"></script>
     <script src="site.js"></script>
+    <script src="ai.js"></script>
     <script>
     (function () {
         var DATA = (window.BD && window.BD.news) ? window.BD.news() : (window.NEWS_DATA || []);
@@ -479,6 +488,7 @@
             document.getElementById('tsOutput').textContent = out;
             document.getElementById('tsCopy').classList.remove('hidden');
             document.getElementById('tsDownload').classList.remove('hidden');
+            document.getElementById('tsAi').classList.remove('hidden');
             window.__tsText = out;
         }
         var tsGen = document.getElementById('tsGenBtn');
@@ -572,7 +582,9 @@
             document.querySelectorAll('[data-rm]').forEach(function (b) {
                 b.addEventListener('click', function () { delete basket[b.getAttribute('data-rm')]; renderCmpList(); renderBasket(); });
             });
-            document.getElementById('cmpRun').disabled = ids.length < 2;
+            var canCmp = ids.length >= 2;
+            document.getElementById('cmpRun').disabled = !canCmp;
+            var cmpAiEl = document.getElementById('cmpAi'); if (cmpAiEl) cmpAiEl.disabled = !canCmp;
         }
         function renderCompare() {
             var ids = Object.keys(basket);
@@ -603,6 +615,91 @@
         var cr = document.getElementById('cmpRun');
         if (cr) cr.addEventListener('click', renderCompare);
         renderCmpList(); renderBasket();
+
+        // ===== AI 增强（DeepSeek + 联网搜索，见 ai.js） =====
+        function runAI(btn, work) {
+            if (!window.BD_AI) { alert('AI 模块未加载'); return; }
+            BD_AI.ensureConfig(function () {
+                var orig = btn.textContent;
+                btn.disabled = true; btn.textContent = '生成中…';
+                Promise.resolve().then(work).then(function () {
+                    btn.disabled = false; btn.textContent = orig;
+                }).catch(function (err) {
+                    btn.disabled = false; btn.textContent = orig;
+                    var msg = (err && err.message === 'NO_KEY') ? '请先在右下角「AI 配置」填写 DeepSeek Key' : ('出错了：' + (err && err.message ? err.message : err));
+                    alert(msg);
+                });
+            });
+        }
+        function targetAi() {
+            var q = tInput.value.trim();
+            if (!q) { alert('请输入靶点 / 产品关键词'); return; }
+            var res = document.getElementById('targetResult');
+            res.innerHTML = '<div class="rounded-2xl border border-dashed border-gray-200 py-16 text-center text-gray-400 text-sm">正在联网搜索并调用 DeepSeek 生成调研报告…</div>';
+            var deals = DATA.filter(function (d) { return d.product && d.product.toLowerCase().indexOf(q.toLowerCase()) >= 0; });
+            return BD_AI.webSearch(q + ' 靶点 药物 BD 交易 临床 进展', 6).then(function (sr) {
+                var localBrief = deals.map(function (d) {
+                    return '- ' + [d.date, d.licenser, '→', d.licensee, d.product, d.coop].filter(Boolean).join(' ');
+                }).join('\n');
+                var searchBrief = sr.raw ? sr.raw.slice(0, 3500) : '(无搜索结果)';
+                var messages = [
+                    { role: 'system', content: '你是资深医药 / 生物科技 BD 分析师，擅长靶点调研与交易趋势分析。用中文，结构化、专业、客观，不编造数据，不确定处标注「需进一步核实」。' },
+                    { role: 'user', content: '请对靶点 / 产品「' + q + '」撰写一份 BD 调研简报。\n\n【站内 BD 交易库匹配到的相关交易】\n' + (localBrief || '(无)') + '\n\n【联网搜索到的公开资料（来自 DuckDuckGo，含噪音请甄别）】\n' + searchBrief + '\n\n要求：1) 靶点 / 产品概述 2) 相关 BD 交易趋势与特征 3) 主要参与方 4) 最新公开动态（基于联网资料）5) 对 BD 人员的启示与风险提示。' }
+                ];
+                return BD_AI.callDeepSeek(messages).then(function (report) {
+                    var src = sr.results.length ? '<div class="mt-4 bg-gray-50 rounded-2xl p-4 border border-gray-100"><div class="text-xs font-semibold text-gray-500 mb-2">参考来源（联网搜索）</div><div class="space-y-1">' + sr.results.map(function (r) { return '<a href="' + esc(r.href) + '" target="_blank" rel="noopener" class="block text-xs text-navy-500 hover:underline truncate">' + esc(r.title) + '</a>'; }).join('') + '</div></div>' : '';
+                    res.innerHTML = '<div class="space-y-4"><div class="bg-white rounded-2xl p-6 border border-navy-200">' + BD_AI.mdToHtml(report) + '</div>' + src + '</div>';
+                });
+            });
+        }
+        function tsAi() {
+            var draft = window.__tsText || document.getElementById('tsOutput').textContent;
+            if (!draft || draft.indexOf('请至少填写') >= 0) { alert('请先生成 Termsheet 草稿'); return; }
+            var messages = [
+                { role: 'system', content: '你是资深医药 BD 商务 / 法务专家。用户已填好一份 Termsheet 草稿要素，请在不改变任何数字与事实的前提下，将其润色、补全为专业、严谨、可直接使用的术语清单（Term Sheet）文本，使用规范条款表述，保持中文。' },
+                { role: 'user', content: '以下是草稿：\n' + draft + '\n\n请润色为正式 Term Sheet。' }
+            ];
+            return BD_AI.callDeepSeek(messages).then(function (out) {
+                document.getElementById('tsOutput').textContent = out;
+                window.__tsText = out;
+            });
+        }
+        function reviewAi() {
+            var text = document.getElementById('reviewInput').value;
+            if (!text.trim()) { alert('请先粘贴待审查文本'); return; }
+            var box = document.getElementById('reviewScore');
+            box.innerHTML = '<div class="text-gray-400 text-sm py-16 text-center">DeepSeek 深度审查中…</div>';
+            var messages = [
+                { role: 'system', content: '你是资深医药 BD 交易律师。请审查用户提供的 Termsheet / 交易公告，按 BD 交易关键条款清单（交易主体、标的、财务条款、地域、交割先决、排他、IP、保密、终止、争议解决、适用法律等）逐项评估完整度，指出缺失与风险，并给出改进建议。中文，结构化。' },
+                { role: 'user', content: '待审查文本：\n' + text + '\n\n请输出结构化审查意见。' }
+            ];
+            return BD_AI.callDeepSeek(messages).then(function (out) {
+                box.innerHTML = '<div class="space-y-4"><h3 class="text-sm font-bold text-navy-700">AI 深度审查意见</h3><div class="bg-white rounded-2xl p-6 border border-navy-200">' + BD_AI.mdToHtml(out) + '</div></div>';
+            });
+        }
+        function cmpAi() {
+            var ids = Object.keys(basket);
+            if (ids.length < 2) { alert('请至少选择 2 条交易'); return; }
+            var deals = ids.map(function (id) { return DATA.filter(function (x) { return String(x.id) === String(id); })[0]; }).filter(Boolean);
+            var info = deals.map(function (d) { return '- ' + (d.product || '未披露') + ' | ' + (d.licenser || '?') + ' → ' + (d.licensee || '?') + ' | ' + (d.category || '') + ' | ' + (d.coop || '') + ' | ' + (d.upfront || '') + ' | ' + (d.territory || ''); }).join('\n');
+            var res = document.getElementById('cmpResult');
+            res.innerHTML = '<div class="rounded-2xl border border-dashed border-gray-200 py-16 text-center text-gray-400 text-sm">DeepSeek 正在生成对比洞察…</div>';
+            var messages = [
+                { role: 'system', content: '你是资深医药 BD 分析师。请对比以下 BD 交易，从交易结构、金额特征、参与方策略、地域布局等角度给出洞察。中文，结构化。' },
+                { role: 'user', content: '交易列表：\n' + info + '\n\n请给出对比洞察。' }
+            ];
+            return BD_AI.callDeepSeek(messages).then(function (out) {
+                res.innerHTML = '<div class="space-y-4"><h3 class="text-sm font-bold text-navy-700">AI 对比洞察</h3><div class="bg-white rounded-2xl p-6 border border-navy-200">' + BD_AI.mdToHtml(out) + '</div></div>';
+            });
+        }
+        var tAiBtn = document.getElementById('targetAiBtn');
+        if (tAiBtn) tAiBtn.addEventListener('click', function () { runAI(tAiBtn, targetAi); });
+        var tsAiBtn = document.getElementById('tsAi');
+        if (tsAiBtn) tsAiBtn.addEventListener('click', function () { runAI(tsAiBtn, tsAi); });
+        var rAiBtn = document.getElementById('reviewAi');
+        if (rAiBtn) rAiBtn.addEventListener('click', function () { runAI(rAiBtn, reviewAi); });
+        var cAiBtn = document.getElementById('cmpAi');
+        if (cAiBtn) cAiBtn.addEventListener('click', function () { runAI(cAiBtn, cmpAi); });
 
         // ===== init from URL =====
         var initTool = new URLSearchParams(location.search).get('tool');
