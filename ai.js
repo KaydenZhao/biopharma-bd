@@ -31,23 +31,67 @@
     return data.choices[0].message.content;
   }
 
-  // ===== 联网搜索（DuckDuckGo via jina.ai，免 key）=====
+  // ===== 联网搜索（多引擎兜底，失败不阻断）=====
   function realUrl(u){
     try { var m = u.match(/[?&]uddg=([^&]+)/); if(m) return decodeURIComponent(m[1]); } catch(e){}
     return u;
   }
-  async function webSearch(query, n){
-    n = n || 6;
-    var ddg = 'https://duckduckgo.com/html/?q=' + encodeURIComponent(query) + '&kl=cn-zh';
-    var url = 'https://r.jina.ai/' + ddg;
-    var r = await fetch(url, { headers: { 'Accept': 'text/plain' } }).catch(function(e){ throw new Error('联网搜索请求失败：' + e.message); });
-    if(!r.ok) throw new Error('联网搜索返回 ' + r.status);
-    var text = await r.text();
-    var results = [];
-    var re = /\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, m;
-    while((m = re.exec(text)) && results.length < n){
-      var title = m[1].trim();
-      var href = realUrl(m[2].trim());
+  // 引擎列表：按优先级依次尝试，任一成功即返回
+  var SEARCH_ENGINES = [
+    {
+      name: 'local',
+      test: function(){ return typeof window.__DESKTOP__ !== 'undefined'; },
+      run: function(query, n){ return fetch('/api/search?q=' + encodeURIComponent(query) + '&n=' + n).then(function(r){ return r.json(); }); }
+    },
+    {
+      name: 'jina',
+      test: function(){ return true; },
+      run: function(query, n){
+        var ddg = 'https://duckduckgo.com/html/?q=' + encodeURIComponent(query) + '&kl=cn-zh';
+        return fetch('https://r.jina.ai/' + ddg, { headers: { 'Accept': 'text/plain' } }).then(function(r){
+          if(!r.ok) throw new Error('jina ' + r.status);
+          return r.text();
+        }).then(parseDdgText);
+      }
+    },
+    {
+      name: 'corsproxy',
+      test: function(){ return true; },
+      run: function(query, n){
+        var ddg = 'https://duckduckgo.com/html/?q=' + encodeURIComponent(query) + '&kl=cn-zh';
+        return fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(ddg)).then(function(r){
+          if(!r.ok) throw new Error('corsproxy ' + r.status);
+          return r.text();
+        }).then(parseDdgHtml);
+      },
+    },
+    {
+      name: 'searxng',
+      test: function(){ return true; },
+      run: function(query, n){
+        var url = 'https://searx.be/search?q=' + encodeURIComponent(query) + '&format=json&language=zh';
+        return fetch(url).then(function(r){
+          if(!r.ok) throw new Error('searxng ' + r.status);
+          return r.json();
+        }).then(function(data){
+          var results = [];
+          var list = (data && data.results) || [];
+          for(var i=0; i<list.length && results.length < n; i++){
+            var item = list[i];
+            if(item.url && item.title && !results.some(function(x){ return x.href === item.url; })){
+              results.push({ title: item.title, href: item.url });
+            }
+          }
+          return { results: results, raw: '' };
+        });
+      }
+    }
+  ];
+  // 从 jina 返回的纯文本（markdown 链接格式）解析结果
+  function parseDdgText(text){
+    var results = [], re = /\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, m;
+    while((m = re.exec(text)) && results.length < 6){
+      var title = m[1].trim(), href = realUrl(m[2].trim());
       if(!/^https?:\/\/(www\.)?(duckduckgo\.com|html\.duckduckgo\.com)/.test(href)){
         if(title && href.indexOf('http') === 0 && !results.some(function(x){ return x.href === href; })){
           results.push({ title: title, href: href });
@@ -55,6 +99,44 @@
       }
     }
     return { results: results, raw: text };
+  }
+  // 从 DuckDuckGo 原始 HTML 解析结果
+  function parseDdgHtml(html){
+    var results = [];
+    // 提取 result__a 标签的链接和标题
+    var re = /class="result__a"[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/gi, m;
+    while((m = re.exec(html)) && results.length < 6){
+      var href = realUrl(m[1]);
+      var title = m[2].replace(/<[^>]+/g, '').trim();
+      if(!/^https?:\/\/(www\.)?(duckduckgo\.com|html\.duckduckgo\.com)/.test(href)){
+        if(title && href.indexOf('http') === 0 && !results.some(function(x){ return x.href === href; })){
+          results.push({ title: title, href: href });
+        }
+      }
+    }
+    return { results: results, raw: '' };
+  }
+
+  async function webSearch(query, n){
+    n = n || 6;
+    var lastErr = '';
+    for(var i=0; i<SEARCH_ENGINES.length; i++){
+      var eng = SEARCH_ENGINES[i];
+      if(!eng.test()) continue;
+      try {
+        var result = await eng.run(query, n);
+        if(result && result.results && result.results.length > 0){
+          console.log('[BD_AI] 搜索成功 (' + eng.name + ')：' + result.results.length + ' 条结果');
+          return result;
+        }
+      } catch(e){
+        lastErr = e.message || String(e);
+        console.log('[BD_AI] 搜索引擎 ' + eng.name + ' 失败：' + lastErr);
+      }
+    }
+    // 所有引擎都失败 → 返回空结果（不抛异常，不阻断 AI 回复）
+    console.warn('[BD_AI] 所有搜索引擎均失败，最后错误：' + lastErr);
+    return { results: [], raw: '' };
   }
 
   // ===== markdown -> 安全 HTML =====
